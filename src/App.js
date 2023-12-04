@@ -22,6 +22,7 @@ import { SignUpPage } from "./Pages/SignUpPage.js";
 import { SignUpDetailsPage } from "./Pages/SignUpDetailsPage.js";
 import { SingleJamRoomPage } from "./Pages/SingleJamRoomPage.js";
 import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
+import { GroupsPage } from "./Pages/GroupsPage";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
           path="/:chatroomId/jamroom"
           element={<SingleJamRoomPage motion={motion} />}
         />
+        <Route path="groups" element={<GroupsPage motion={motion} />} />
       </Routes>
     </>
   );
