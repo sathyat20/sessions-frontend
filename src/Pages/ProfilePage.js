@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import {CfmRejButton} from "../Components/Buttons/CfmRejButton"
-// import {EditButton} from "../Components/Buttons/EditButton"
-// import {DeleteButton} from "../Components/Buttons/DeleteButton"
 import { ProfilePic } from "../Components/ProfilePage/ProfilePic";
-import { InstrumentTable } from "../Components/ProfilePage/InstrumentTable";
-import { Username } from "../Components/ProfilePage/Username";
+import { InstrumentList } from "../Components/ProfilePage/V2/InstrumentList";
 import { Bio } from "../Components/ProfilePage/Bio";
 import { ArtistList } from "../Components/ProfilePage/ArtistList";
-import { GenreList } from "../Components/ProfilePage/GenreList";
+import { GenreList } from "../Components/ProfilePage/V2/GenreList";
+import { SessionClips } from "../Components/ProfilePage/V2/SessionClips"
+import { Qualifications } from "../Components/ProfilePage/V2/Qualifications"
 import axios from "axios";
 
 export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
@@ -35,7 +33,6 @@ export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
     };
     getCurrentUser();
 
-    // console.log("exit ");
   }, []);
 
   useEffect(() => {
@@ -53,69 +50,44 @@ export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
     }
   }, [isAuthenticated]);
 
-  const numberOfSessions = "65";
-  const uniqueCollaborators = "30";
+  // const numberOfSessions = "65";
+  // const uniqueCollaborators = "30";
 
   return (
     <>
+    {console.log(pageOwnerInfo)}
       <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em] ">
         <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-hidden overflow-y-auto ">
           <div className="flex flex-col pt-[2em] mb-[-10em] gap-[1.5em] lg:gap-[3em] ">
-            <div className="">
-              {/* <h1 className="font-bold text-txtcolor-primary text-[1.5rem] text-left ">
-                PROFILE
-              </h1> */}
+            <div>
               {pageOwnerInfo && userId ? (
-                <div>
+                <section>
                   <ProfilePic
                     isOwnPage={isOwnPage}
                     displayedUserId={userId}
                     storedURL={pageOwnerInfo.profilePictureUrl}
                   />
-                  <Username
-                    isOwnPage={isOwnPage}
-                    displayedUserId={userId}
-                    storedUsername={pageOwnerInfo.fullName}
-                  />
-                </div>
+                  {pageOwnerInfo.fullName}
+                </section>
               ) : null}
             </div>
 
             {userId && (
-              <InstrumentTable
-                isOwnPage={isOwnPage}
+              <div>
+              <InstrumentList
                 displayedUserId={userId}
                 token={tokenAuth}
               />
-            )}
-
-            {/* <button
-              onClick={() => {
-                console.log(pageOwnerInfo);
-              }}
-            >
-              HELLO
-            </button> */}
-
-            <div className="flex flex-row flex-wrap gap-[3em]">
-              <div>
-                <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
-                  SESSIONS
-                </h1>
-                <p className="text-[3rem] font-semibold leading-[1em]">
-                  {numberOfSessions}
-                </p>
-              </div>
-
-              <div>
-                <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left ">
-                  UNIQUE JAM BUDDIES
-                </h1>
-                <p className="text-[3rem] font-semibold leading-[1em]">
-                  {uniqueCollaborators}
-                </p>
-              </div>
+              <GenreList
+                displayedUserId={userId}
+                token={tokenAuth}
+              />
+              <SessionClips 
+              displayedUserId = {userId}
+              token={tokenAuth}
+            />  
             </div>
+            )}
 
             {pageOwnerInfo ? (
               <Bio
@@ -125,13 +97,7 @@ export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
               />
             ) : null}
 
-            {userId && (
-              <GenreList
-                isOwnPage={isOwnPage}
-                displayedUserId={userId}
-                token={tokenAuth}
-              />
-            )}
+            
             {userId && (
               <ArtistList
                 isOwnPage={isOwnPage}
@@ -139,6 +105,17 @@ export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
                 token={tokenAuth}
               />
             )}
+
+            Placeholder for favourite songs
+
+            {userId && (
+              <Qualifications
+                displayedUserId={userId}
+                token={tokenAuth}
+              />
+            )}
+
+
 
             {/* LOGOUT BUTTON */}
             <div className="pt-[1.5em]">
