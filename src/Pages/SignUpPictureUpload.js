@@ -24,57 +24,93 @@ export const SignUpPictureUpload = ({ motion }) => {
     setTokenAuth(TOKEN);
   }, []);
 
-  const handleSubmitMessage = (ev) => {
-    postNewMessage(); // All Consecutive Functions have to go in here (AXIOS GET -> AXIOS GET -> AXIOS POST)
-  };
+  // const handleSubmitMessage = async (ev) => {
+  //   ev.preventDefault();
+  //   if (uploadedFile.fileInputFile) {
+  //     await uploadProfilePicture();
+  //   }
+  //   postNewMessage(); // All Consecutive Functions have to go in here (AXIOS GET -> AXIOS GET -> AXIOS POST)
+  // };
 
-  const postNewMessage = async () => {
-    let uploadURL;
-    let newMessage;
-
-    /**
-     * POST Message -> Get Message Primary Key -> POST Image
-     * */
-
-    if (uploadedFile.fileInputFile != null) {
-      // POST Profile Picture to Corresponding user
-
-      // Upload Photo Image to Firebase, get the URL
-      if (
-        uploadedFile.fileInputFile === undefined ||
-        uploadedFile.fileInputFile === null
-      ) {
-        alert("You need to upload a picture!");
-      } else {
-        const storageRef = sRef(
-          storage,
-          STORAGE_KEY + uploadedFile.fileInputFile.name
-        );
-        // console.log(uploadedFile.fileInputFile.name);
-        uploadBytes(storageRef, uploadedFile.fileInputFile).then((snapshot) => {
-          console.log("uploaded a file!");
-          getDownloadURL(storageRef, uploadedFile.fileInputFile.name)
-            .then((fileUrl) => (uploadURL = fileUrl))
-            .then(async () => {
-              // POST - Add the profile picture to the corresponding user
-              let newProfilePicture = await axios.post(
-                `${process.env.REACT_APP_BACKEND_URL}/users/addProfilePicture`,
-                {
-                  photoURL: uploadURL,
-                },
-                { headers: { Authorization: tokenAuth } }
-              );
-            })
-            .then(() => {
-              alert("Image Uploaded!");
-              navigate("/additionaldetails");
-            });
-        });
-      }
-    } else {
-      alert("Please Upload An Image!");
+  const handleUpload = async () => {
+    if (!uploadedFile.fileInputFile) {
+      alert("You need to upload a picture or skip!");
+      return;
     }
-  };
+
+    const storageRef = sRef(
+      storage,
+      STORAGE_KEY + uploadedFile.fileInputFile.name
+    );
+
+    try {
+      await uploadBytes(storageRef, uploadedFile.fileInputFile);
+      const fileUrl = await getDownloadURL(storageRef);
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/users/addProfilePicture`,
+        { photoURL: fileUrl },
+        { headers: { Authorization: tokenAuth } }
+      );
+      alert("Image Uploaded!");
+      navigate("/additionaldetails");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Error uploading image!");
+    }
+    }
+
+    const handleSkip = () => {
+      navigate("/additionaldetails")
+    }
+
+
+  // const postNewMessage = async () => {
+  //   let uploadURL;
+  //   let newMessage;
+
+  //   /**
+  //    * POST Message -> Get Message Primary Key -> POST Image
+  //    * */
+
+  //   if (uploadedFile.fileInputFile != null) {
+  //     // POST Profile Picture to Corresponding user
+
+  //     // Upload Photo Image to Firebase, get the URL
+  //     if (
+  //       uploadedFile.fileInputFile === undefined ||
+  //       uploadedFile.fileInputFile === null
+  //     ) {
+  //       alert("You need to upload a picture!");
+  //     } else {
+  //       const storageRef = sRef(
+  //         storage,
+  //         STORAGE_KEY + uploadedFile.fileInputFile.name
+  //       );
+  //       // console.log(uploadedFile.fileInputFile.name);
+  //       uploadBytes(storageRef, uploadedFile.fileInputFile).then((snapshot) => {
+  //         console.log("uploaded a file!");
+  //         getDownloadURL(storageRef, uploadedFile.fileInputFile.name)
+  //           .then((fileUrl) => (uploadURL = fileUrl))
+  //           .then(async () => {
+  //             // POST - Add the profile picture to the corresponding user
+  //             let newProfilePicture = await axios.post(
+  //               `${process.env.REACT_APP_BACKEND_URL}/users/addProfilePicture`,
+  //               {
+  //                 photoURL: uploadURL,
+  //               },
+  //               { headers: { Authorization: tokenAuth } }
+  //             );
+  //           })
+  //           .then(() => {
+  //             alert("Image Uploaded!");
+  //             navigate("/additionaldetails");
+  //           });
+  //       });
+  //     }
+  //   } else {
+  //     alert("Please Upload An Image!");
+  //   }
+  // };
 
   return (
     <>
@@ -135,13 +171,20 @@ export const SignUpPictureUpload = ({ motion }) => {
               />
             </form>
           </div>
-
-          <button
-            onClick={handleSubmitMessage}
+          <div className="flex justify-around">
+            <button
+              onClick={handleUpload}
+              className="bg-fill-secondary px-[1em] py-[.2em] text-white font-semibold rounded-md active:outline-none scale-100 transition-all active:scale-95"
+            >
+              UPLOAD PROFILE PICTURE
+            </button>
+            <button
+            onClick={handleSkip}
             className="bg-fill-secondary px-[1em] py-[.2em] text-white font-semibold rounded-md active:outline-none scale-100 transition-all active:scale-95"
-          >
-            UPLOAD PROFILE PICTURE
-          </button>
+            >
+              SKIP AND CONTINUE
+            </button>
+          </div>
         </motion.div>
       </div>
     </>
