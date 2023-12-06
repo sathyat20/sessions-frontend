@@ -16,10 +16,9 @@ export function SessionClips({ displayedUserId }) {
         setClipsList(clips); // replace depending on what comes out of the console.log
       };
       getClips();
-    }, []);
+    }, [displayedUserId]);
   
     
-    console.log(clipsList)
     const displayedClips = clipsList.data?.map((clip) => {     
       return (
         <VideoTile videoId = {clip.id} videoUrl = {clip.hostUrl}/>

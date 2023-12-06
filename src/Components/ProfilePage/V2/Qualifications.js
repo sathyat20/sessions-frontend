@@ -15,7 +15,7 @@ export function Qualifications({ displayedUserId }) {
             setUserInstrumentsList(userInstrumentsInfo.data.playedInstruments);
         };
         getUserInstrumentsInfo();
-    }, []);
+    }, [displayedUserId]);
 
     const qualificationRows = userInstrumentsList.map((entry) => {
         let singleQualification = '';
@@ -30,7 +30,6 @@ export function Qualifications({ displayedUserId }) {
 
     return (
         <section>
-        {console.log(qualificationRows)}
         {qualificationRows.every((item)=>item === '') ? null : 
         <div>
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">QUALIFICATIONS</h1>
