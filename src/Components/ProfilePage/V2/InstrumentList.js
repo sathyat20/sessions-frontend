@@ -16,7 +16,7 @@ export function InstrumentList({ displayedUserId }) {
             setUserInstrumentsList(userInstrumentsInfo.data.playedInstruments);
         };
         getUserInstrumentsInfo();
-    }, []);
+    }, [displayedUserId]);
 
     return (
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">

@@ -43,6 +43,7 @@ function App() {
         <Route path="search" element={<SearchPage motion={motion} />} />
 
         <Route path="userprofile" element={<ProfilePage motion={motion} />} />
+        <Route path="userprofile/:pageOwnerUserId" element={<ProfilePage motion={motion} />} />
         <Route
           path="jamchatroom"
           element={<JamChatroomPage motion={motion} />}
