@@ -23,6 +23,7 @@ import { SignUpDetailsPage } from "./Pages/SignUpDetailsPage.js";
 import { SingleJamRoomPage } from "./Pages/SingleJamRoomPage.js";
 import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
 import { GroupsPage } from "./Pages/GroupsPage";
+import { GroupDetailPage } from "./Pages/GroupDetailPage";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           element={<SingleJamRoomPage motion={motion} />}
         />
         <Route path="groups" element={<GroupsPage motion={motion} />} />
+        <Route path="/group/:groupId" element={<GroupDetailPage />} />
       </Routes>
     </>
   );

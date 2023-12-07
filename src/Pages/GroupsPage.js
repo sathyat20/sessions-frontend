@@ -4,6 +4,7 @@ import axios from "axios";
 
 export const GroupsPage = ({ motion }) => {
   const [tokenAuth, setTokenAuth] = useState(null);
+  const [groups, setGroups] = useState([]);
 
   const navigate = useNavigate();
 
@@ -11,7 +12,31 @@ export const GroupsPage = ({ motion }) => {
     let TOKEN = localStorage.getItem("token");
     console.log("get token: ", TOKEN);
     setTokenAuth(TOKEN);
+
+    const fetchGroups = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/groups/4",
+          {
+            headers: {
+              Authorization: `Bearer ${TOKEN}`, 
+            },
+          }
+        );
+        console.log(response.data)
+        setGroups(response.data);
+      } catch (err) {
+        console.error("Error fetching groups", err);
+      }
+    };
+
+    fetchGroups();
+
   }, []);
+
+   const handleGroupClick = (group) => {
+     navigate(`/group/${group.id}`, {state: {group}});
+   };
 
   return (
     <>
@@ -27,32 +52,15 @@ export const GroupsPage = ({ motion }) => {
             damping: 8,
           }}
         >
-          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold">GROOVE QUARTET</h1>
-            <p className="text-xl">JAZZ BAND</p>
-            <p className="text-md text-gray-600">
-              Currently looking for a new bassist
-            </p>
-          </div>
-
-          {/* Session Clips */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-4">SESSION CLIPS</h2>
-          </div>
-
-          {/* About Us */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-4">ABOUT US</h2>
-            <p>
-              A professional with 10y experience in music scene, Timmy got his
-              Diploma in Performative Advocacy
-            </p>
-          </div>
-
-          {/* Members */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-4">MEMBERS</h2>
+            <h2 className="text-3xl font-bold mb-4">MY GROUPS</h2>
+            <ul>
+              {groups.map((group) => (
+                <li key={group.id} onClick={() => handleGroupClick(group)}>
+                  {group.groupName}
+                </li>
+              ))}
+            </ul>
           </div>
         </motion.div>
       </div>
