@@ -1,3 +1,6 @@
+import React from "react";
+import { useState } from "react";
+
 // Import React Router Functions
 import { Routes, Route } from "react-router-dom";
 
@@ -24,9 +27,16 @@ import { SingleJamRoomPage } from "./Pages/SingleJamRoomPage.js";
 import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
 import { GroupsPage } from "./Pages/GroupsPage";
 
+export const UserContext = React.createContext(null)
+
 function App() {
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null)
+  const context = {userId, setUserId, userName, setUserName};
+
   return (
     <>
+    <UserContext.Provider value={context}>
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage motion={motion} />} />
@@ -55,6 +65,7 @@ function App() {
         />
         <Route path="groups" element={<GroupsPage motion={motion} />} />
       </Routes>
+      </UserContext.Provider>
     </>
   );
 }

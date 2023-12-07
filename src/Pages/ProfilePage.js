@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../App.js";
 import { useNavigate, useParams } from "react-router-dom";
 import { InstrumentList } from "../Components/ProfilePage/V2/InstrumentList";
 import { ArtistList } from "../Components/ProfilePage/V2/ArtistList";
@@ -7,37 +8,23 @@ import { SessionClips } from "../Components/ProfilePage/V2/SessionClips"
 import { Qualifications } from "../Components/ProfilePage/V2/Qualifications"
 import { Connections } from "../Components/ProfilePage/V2/Connections"
 import { EditProfileModal } from "../Components/ProfilePage/V2/EditProfileModal"
+import { EditConnectionButton } from "../Components/Buttons/EditConnectionButton"
+import { NotificationsButton } from "../Components/Buttons/NotificationsButton"
+import { StartChatButton } from "../Components/Buttons/StartChatButton"
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
 export const ProfilePage = ({ motion, loggedInUserId }) => {
-  // these are being set upon entry
   const {pageOwnerUserId} = useParams()
-  const [tokenAuth, setTokenAuth] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const context = useContext(UserContext);
+  const [userId, setUserId] = useState(context.userId);
   const [editProfileModalToggle, setEditProfileModalToggle] = useState(false);
   const [pageOwnerInfo, setPageOwnerInfo] = useState(null);
   const navigate = useNavigate();
-  
 
   useEffect(() => {
-    const getCurrentUser = async () => {
-      let currentUserInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-      setIsAuthenticated(true);
-      setUserId(currentUserInfo.data.user.id);
-    };
-    getCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) {
       const getUserInfo = async () => {
+        if (userId) {
         const pageOwnerInfo = await axios.get(
           `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerUserId ? pageOwnerUserId : userId}`,
           {
@@ -45,10 +32,10 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
           }
         );
         setPageOwnerInfo({...pageOwnerInfo.data.user});
+        }
       };
       getUserInfo();
-    }
-  }, [isAuthenticated, pageOwnerUserId]);
+  }, [pageOwnerUserId, userId]);
 
   const handleEditProfileModal = () => {
     //may need some code to pass in the user ID here
@@ -61,17 +48,23 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
 
   return (
     <>
+    {console.log(context.userId)}
       <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em] ">
         <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-hidden overflow-y-auto ">
-          <div className="flex flex-col pt-[2em] mb-[-10em] gap-[1.5em] lg:gap-[3em] ">
-            <div>
-              {pageOwnerUserId ?
+          <div className="flex flex-col pt-[2em] mb-[-10em] gap-[1.5em] lg:gap-[3em] w-full">
+            <section className = "w-full">
+              {pageOwnerUserId && pageOwnerInfo ?
+              <div>
                 <button onClick={() => navigate(-1)}>
                   <ArrowLeftIcon class="h-6 w-6 text-gray-500" />
                 </button>
+                <EditConnectionButton requesterId = {userId} requestedId={pageOwnerUserId} requestedName={pageOwnerInfo.fullName}/>
+                <StartChatButton requestedId={pageOwnerUserId} requesterName={context.userName} requestedName={pageOwnerInfo.fullName}/>
+                </div>
                 : null}
                 <button onClick={()=>{handleEditProfileModal()}}> editprofile </button>
-            </div>
+                <NotificationsButton userId = {userId} />
+            </section>
             <div>
               {pageOwnerInfo && userId ? (
                 <section>
@@ -90,18 +83,15 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             </div>
 
             {pageOwnerInfo && (
-              <div>
+              <div className = "w-full">
               <InstrumentList
                 displayedUserId={pageOwnerInfo.id}
-                token={tokenAuth}
               />
               <GenreList
                 displayedUserId={pageOwnerInfo.id}
-                token={tokenAuth}
               />
               <SessionClips 
               displayedUserId = {pageOwnerInfo.id}
-              token={tokenAuth}
             />  
             </div>
             )}
@@ -122,7 +112,6 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             {pageOwnerInfo && (
               <ArtistList
                 displayedUserId={pageOwnerInfo.id}
-                token={tokenAuth}
               />
             )}
 
@@ -131,16 +120,13 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             {pageOwnerInfo && (
               <Qualifications
                 displayedUserId={pageOwnerInfo.id}
-                token={tokenAuth}
               />
             )}
             {pageOwnerInfo && (
               <Connections
                 displayedUserId={pageOwnerInfo.id}
-                token={tokenAuth}
               />
             )}
-
 
             {/* LOGOUT BUTTON */}
             <div className="pt-[1.5em]">
@@ -150,7 +136,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
                   value="LOGOUT"
                   onClick={() => {
                     localStorage.removeItem("token");
-                    setIsAuthenticated(false);
+                    context.setUserId(null)
                     navigate("/");
                   }}
                   className="secondary-cta-btn w-[100%] lg:w-[100%]"
@@ -159,6 +145,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             </div>
           </div>
         </div>
+        
         {/* MODALS GO HERE */}
         {editProfileModalToggle && (
             <EditProfileModal

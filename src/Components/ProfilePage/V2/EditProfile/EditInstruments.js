@@ -194,8 +194,7 @@ export function EditInstruments({ displayedUserId }) {
 
   return (
     <div>
-    {console.log(userInstrumentsList)}
-    {console.log(fullInstrumentsList)}
+    <hr />
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
           INSTRUMENTS

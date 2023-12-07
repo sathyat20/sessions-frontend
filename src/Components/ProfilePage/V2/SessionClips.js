@@ -28,11 +28,11 @@ export function SessionClips({ displayedUserId }) {
     
   
     return (
-        <div>
-            <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
+        <div className = "w-full">
+            <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left w-full">
                 SESSION CLIPS
             </h1>
-            <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em] flex flex-row justify-center">
+            <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em] flex flex-row justify-start w-full h-full overflow-scroll">
                 {displayedClips}
             </div>
         </div>
