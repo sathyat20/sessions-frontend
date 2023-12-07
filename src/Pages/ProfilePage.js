@@ -1,121 +1,132 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ProfilePic } from "../Components/ProfilePage/ProfilePic";
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../App.js";
+import { useNavigate, useParams } from "react-router-dom";
 import { InstrumentList } from "../Components/ProfilePage/V2/InstrumentList";
-import { Bio } from "../Components/ProfilePage/Bio";
-import { ArtistList } from "../Components/ProfilePage/ArtistList";
+import { ArtistList } from "../Components/ProfilePage/V2/ArtistList";
 import { GenreList } from "../Components/ProfilePage/V2/GenreList";
 import { SessionClips } from "../Components/ProfilePage/V2/SessionClips"
 import { Qualifications } from "../Components/ProfilePage/V2/Qualifications"
+import { Connections } from "../Components/ProfilePage/V2/Connections"
+import { EditProfileModal } from "../Components/ProfilePage/V2/EditProfileModal"
+import { EditConnectionButton } from "../Components/Buttons/EditConnectionButton"
+import { NotificationsButton } from "../Components/Buttons/NotificationsButton"
+import { StartChatButton } from "../Components/Buttons/StartChatButton"
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
-export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
-  // these are being set upon entry
-  const [tokenAuth, setTokenAuth] = useState(null);
-  const [currentUser, setCurrentUser] = useState({});
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userId, setUserId] = useState(null);
-
-  const navigate = useNavigate();
-  const [isOwnPage, setIsOwnPage] = useState(true); //this will later setup depending on whether username on page matches login user
+export const ProfilePage = ({ motion, loggedInUserId }) => {
+  const {pageOwnerUserId} = useParams()
+  const context = useContext(UserContext);
+  const [userId, setUserId] = useState(context.userId);
+  const [editProfileModalToggle, setEditProfileModalToggle] = useState(false);
   const [pageOwnerInfo, setPageOwnerInfo] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getCurrentUser = async () => {
-      let currentUserInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-      setIsAuthenticated(true);
-      setUserId(currentUserInfo.data.user.id);
-    };
-    getCurrentUser();
-
-  }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) {
       const getUserInfo = async () => {
+        if (userId) {
         const pageOwnerInfo = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/${userId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerUserId ? pageOwnerUserId : userId}`,
           {
             headers: { Authorization: localStorage.getItem("token") },
           }
-        ); // this should be pageOwnerUserId
-        setPageOwnerInfo(pageOwnerInfo.data.user);
+        );
+        setPageOwnerInfo({...pageOwnerInfo.data.user});
+        }
       };
       getUserInfo();
-    }
-  }, [isAuthenticated]);
+  }, [pageOwnerUserId, userId]);
 
-  // const numberOfSessions = "65";
-  // const uniqueCollaborators = "30";
+  const handleEditProfileModal = () => {
+    //may need some code to pass in the user ID here
+    setEditProfileModalToggle(!editProfileModalToggle);
+  };
+
+  const removeModal = () => {
+    setEditProfileModalToggle(false);
+  };
 
   return (
     <>
-    {console.log(pageOwnerInfo)}
+    {console.log(context.userId)}
       <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em] ">
         <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-hidden overflow-y-auto ">
-          <div className="flex flex-col pt-[2em] mb-[-10em] gap-[1.5em] lg:gap-[3em] ">
+          <div className="flex flex-col pt-[2em] mb-[-10em] gap-[1.5em] lg:gap-[3em] w-full">
+            <section className = "w-full">
+              {pageOwnerUserId && pageOwnerInfo ?
+              <div>
+                <button onClick={() => navigate(-1)}>
+                  <ArrowLeftIcon class="h-6 w-6 text-gray-500" />
+                </button>
+                <EditConnectionButton requesterId = {userId} requestedId={pageOwnerUserId} requestedName={pageOwnerInfo.fullName}/>
+                <StartChatButton requestedId={pageOwnerUserId} requesterName={context.userName} requestedName={pageOwnerInfo.fullName}/>
+                </div>
+                : null}
+                <button onClick={()=>{handleEditProfileModal()}}> editprofile </button>
+                <NotificationsButton userId = {userId} />
+            </section>
             <div>
               {pageOwnerInfo && userId ? (
                 <section>
-                  <ProfilePic
-                    isOwnPage={isOwnPage}
-                    displayedUserId={userId}
-                    storedURL={pageOwnerInfo.profilePictureUrl}
-                  />
+                  <div className="flex flex-col items-center pb-[2em]">
+                    <div className="w-[15em] h-[15em] rounded-lg overflow-hidden">
+                      <img
+                        src={pageOwnerInfo.profilePictureUrl}
+                        alt="Profile photo"
+                        className="h-full object-cover"
+                      />
+                    </div>
+                  </div>        
                   {pageOwnerInfo.fullName}
                 </section>
               ) : null}
             </div>
 
-            {userId && (
-              <div>
+            {pageOwnerInfo && (
+              <div className = "w-full">
               <InstrumentList
-                displayedUserId={userId}
-                token={tokenAuth}
+                displayedUserId={pageOwnerInfo.id}
               />
               <GenreList
-                displayedUserId={userId}
-                token={tokenAuth}
+                displayedUserId={pageOwnerInfo.id}
               />
               <SessionClips 
-              displayedUserId = {userId}
-              token={tokenAuth}
+              displayedUserId = {pageOwnerInfo.id}
             />  
             </div>
             )}
 
             {pageOwnerInfo ? (
-              <Bio
-                isOwnPage={isOwnPage}
-                displayedUserId={userId}
-                storedBio={pageOwnerInfo.bio}
-              />
+              <div className="font-bold text-slate-800 text-sm flex flex-col  ">
+                <div className="flex flex-row">
+                  <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
+                    BIO
+                  </h1>
+                </div>
+                {pageOwnerInfo.bio}
+              </div>
+              
             ) : null}
 
             
-            {userId && (
+            {pageOwnerInfo && (
               <ArtistList
-                isOwnPage={isOwnPage}
-                displayedUserId={userId}
-                token={tokenAuth}
+                displayedUserId={pageOwnerInfo.id}
               />
             )}
 
             Placeholder for favourite songs
 
-            {userId && (
+            {pageOwnerInfo && (
               <Qualifications
-                displayedUserId={userId}
-                token={tokenAuth}
+                displayedUserId={pageOwnerInfo.id}
               />
             )}
-
-
+            {pageOwnerInfo && (
+              <Connections
+                displayedUserId={pageOwnerInfo.id}
+              />
+            )}
 
             {/* LOGOUT BUTTON */}
             <div className="pt-[1.5em]">
@@ -125,7 +136,7 @@ export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
                   value="LOGOUT"
                   onClick={() => {
                     localStorage.removeItem("token");
-                    setIsAuthenticated(false);
+                    context.setUserId(null)
                     navigate("/");
                   }}
                   className="secondary-cta-btn w-[100%] lg:w-[100%]"
@@ -134,6 +145,19 @@ export const ProfilePage = ({ motion, pageOwnerUserId, loggedInUserId }) => {
             </div>
           </div>
         </div>
+        
+        {/* MODALS GO HERE */}
+        {editProfileModalToggle && (
+            <EditProfileModal
+              removeModal={removeModal}
+            />
+          )}
+          {editProfileModalToggle && (
+            <div
+              onClick={removeModal}
+              className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
+            ></div>
+          )}
       </div>
     </>
   );

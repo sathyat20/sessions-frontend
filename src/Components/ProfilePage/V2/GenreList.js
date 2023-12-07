@@ -22,7 +22,7 @@ export function GenreList({ displayedUserId }) {
       setGenresList(genreInfo.data.genreInterests.map((genre) => genre.name)); // check what's in genreInfo
     };
     getGenreInfo();
-  }, []);
+  }, [displayedUserId]);
 
   
 

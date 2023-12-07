@@ -1,3 +1,6 @@
+import React from "react";
+import { useState } from "react";
+
 // Import React Router Functions
 import { Routes, Route } from "react-router-dom";
 
@@ -25,9 +28,16 @@ import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
 import { GroupsPage } from "./Pages/GroupsPage";
 import { GroupDetailPage } from "./Pages/GroupDetailPage";
 
+export const UserContext = React.createContext(null)
+
 function App() {
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null)
+  const context = {userId, setUserId, userName, setUserName};
+
   return (
     <>
+    <UserContext.Provider value={context}>
       <NavBar />
       <Routes>
         <Route path="/" element={<LandingPage motion={motion} />} />
@@ -44,6 +54,7 @@ function App() {
         <Route path="search" element={<SearchPage motion={motion} />} />
 
         <Route path="userprofile" element={<ProfilePage motion={motion} />} />
+        <Route path="userprofile/:pageOwnerUserId" element={<ProfilePage motion={motion} />} />
         <Route
           path="jamchatroom"
           element={<JamChatroomPage motion={motion} />}
@@ -56,6 +67,7 @@ function App() {
         <Route path="groups" element={<GroupsPage motion={motion} />} />
         <Route path="/group/:groupId" element={<GroupDetailPage />} />
       </Routes>
+      </UserContext.Provider>
     </>
   );
 }

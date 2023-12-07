@@ -138,31 +138,31 @@ export const UserProfileModal = ({ pageOwnerUserId, removeModal }) => {
               {!isBeingEdited ? <input
                 type="button"
                 value="CREATE ROOM WITH ME!"
-                onClick={()=>setIsBeingEdited(true)}
+                onClick={() => setIsBeingEdited(true)}
                 className="secondary-cta-btn w-[100%] lg:w-[100%]"
               /> : null}
               {isBeingEdited ?
-              <>    
-            {/* <div className="">
+                <>
+                  {/* <div className="">
               <p className="text-slate-800 font-semibold text-center text-txtcolor-primary text-[2rem] mt-[0em] lg:mt-[1em] md:mt-[1em]">
                 JAM WITH ME?
               </p> */}
-              <input
-                type="text"
-                name="roomname"
-                onChange={handleTextChange}
-                value={textField.roomname}
-                autoComplete="off"
-                placeholder="JAM ROOM NAME?"
-                className="primary-input-form text-center"
-              />
-              <input
-                type="button"
-                value="Confirm Create"
-                onClick={handleCreateRoomForTwo}
-                className="secondary-cta-btn w-[100%] lg:w-[100%] mb-[1em]"
-              /> 
-              </> : null
+                  <input
+                    type="text"
+                    name="roomname"
+                    onChange={handleTextChange}
+                    value={textField.roomname}
+                    autoComplete="off"
+                    placeholder="JAM ROOM NAME?"
+                    className="primary-input-form text-center"
+                  />
+                  <input
+                    type="button"
+                    value="Confirm Create"
+                    onClick={handleCreateRoomForTwo}
+                    className="secondary-cta-btn w-[100%] lg:w-[100%] mb-[1em]"
+                  />
+                </> : null
               }
             </div>
           </div>
