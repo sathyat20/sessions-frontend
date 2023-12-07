@@ -20,7 +20,7 @@ export function Qualifications({ displayedUserId }) {
     const qualificationRows = userInstrumentsList.map((entry) => {
         let singleQualification = '';
         if (entry.highestQualification) {
-            singleQualification = entry.highestQualification + ' in ' + entry.instrument.label
+            singleQualification = entry.highestQualification.label + ' in ' + entry.instrument.label
             if (entry.qualificationInstitution) {
                 singleQualification += (' from ' + entry.qualificationInstitution)
             }

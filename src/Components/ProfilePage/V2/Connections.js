@@ -25,8 +25,8 @@ export function Connections({ displayedUserId }) {
         return (
             <div className='flex flex-col w-[5em] justify-start'>
                 <label for={`navigate-user-${usersConnection.id}`}>
-                    <div className=" h-[5em] rounded-lg overflow-hidden bg-green-300 cursor-pointer">
-                        <img src={usersConnection.profilePictureUrl} />
+                    <div className=" h-[5em] rounded-lg overflow-hidden cursor-pointer">
+                        <img className= 'h-full w-full object-cover' src={usersConnection.profilePictureUrl} />
                     </div>
                 </label>
                 <p className="text-xs">{usersConnection.fullName}</p>

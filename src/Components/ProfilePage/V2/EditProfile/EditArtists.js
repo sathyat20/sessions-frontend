@@ -116,6 +116,7 @@ export function EditArtists({ displayedUserId }) {
 
   return (
     <div>
+    <hr />
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left ">
           FAVOURITE ARTISTS
