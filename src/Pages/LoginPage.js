@@ -77,6 +77,8 @@ export const LoginPage = ({ motion }) => {
       console.log(checkUser)
       context.setUserId(checkUser.data.id)
       context.setUserName(user.username)
+      // localStorage.setItem('userId', checkUser.data.id)
+      // localStorage.setItem('userName', user.username)
       localStorage.setItem("token", "Bearer " + checkUser.data.data);
       navigate("/search");
     } else {

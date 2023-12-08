@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Import React Router Functions
 import { Routes, Route } from "react-router-dom";
@@ -9,6 +9,7 @@ import "./App.css";
 
 // Import Libraries
 import { motion } from "framer-motion";
+import axios from "axios";
 
 // Import Auth Provider
 
@@ -27,13 +28,35 @@ import { SingleJamRoomPage } from "./Pages/SingleJamRoomPage.js";
 import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
 import { GroupsPage } from "./Pages/GroupsPage";
 import { GroupDetailPage } from "./Pages/GroupDetailPage";
+import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 
 export const UserContext = React.createContext(null)
 
 function App() {
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null)
-  const context = {userId, setUserId, userName, setUserName};
+  const [userName, setUserName] = useState(null);
+  const context = {userId, setUserId, userName, setUserName}
+
+
+  useEffect(() => {
+    let TOKEN = localStorage.getItem("token");
+    console.log(TOKEN)
+    if (TOKEN) {
+      const getCurrentUser = async () => {
+        console.log('getting')
+        let currentUserInfo = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
+          {
+            headers: { Authorization: TOKEN },
+          }
+        );
+        setUserName(currentUserInfo.data.user.fullName);
+        setUserId(currentUserInfo.data.user.id);
+      };
+      getCurrentUser();
+    } 
+    
+  }, []);
 
   return (
     <>

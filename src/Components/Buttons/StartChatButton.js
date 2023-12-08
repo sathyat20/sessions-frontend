@@ -31,7 +31,7 @@ export function StartChatButton({requestedId, requesterName, requestedName}) {
       return (
         <div>
             <label for={`startChat-${requestedId}`} >
-            <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+            <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white cursor-pointer" />
             </label>
             <button
                 id={`startChat-${requestedId}`}
