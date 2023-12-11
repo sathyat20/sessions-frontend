@@ -38,7 +38,7 @@ export function GenreList({ displayedUserId }) {
   
 
   return (
-      <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em] flex flex-row justify-center">
+      <div className="text-xl font-semibold leading-[1.2em] pr-[1em] flex flex-row justify-center">
         {genreText}
       </div>
   );
