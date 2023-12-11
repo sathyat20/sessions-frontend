@@ -22,6 +22,7 @@ export function EditUser({ pageOwnerInfo }) {
 const careerStatusList = [
     {value:'Amateur', label:'Amateur(I play for fun)'},
     {value:'Semi-Pro', label:'Semi-Pro(I sometimes make a few bucks playing)'},
+    {value: 'Full-time music student', label:'Full-time music student'},
     {value:'Professional', label:'Professional(This is my full time job)'},
     {value:'Educator', label:'Educator'},
   ]

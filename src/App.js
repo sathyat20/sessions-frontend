@@ -20,6 +20,7 @@ import { NavBar } from "./Components/NavBar/NavBar.js";
 import { LandingPage } from "./Pages/LandingPage.js";
 import { LoginPage } from "./Pages/LoginPage.js";
 import { SearchPage } from "./Pages/SearchPage.js";
+import { SearchResultsPage } from "./Pages/SearchResultsPage";
 import { ProfilePage } from "./Pages/ProfilePage.js";
 import { JamChatroomPage } from "./Pages/JamChatroomPage.js";
 import { SignUpPage } from "./Pages/SignUpPage.js";
@@ -28,6 +29,8 @@ import { SingleJamRoomPage } from "./Pages/SingleJamRoomPage.js";
 import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
 import { GroupsPage } from "./Pages/GroupsPage";
 import { GroupDetailPage } from "./Pages/GroupDetailPage";
+import {SearchType} from "./Components/SearchPage/SearchType"
+import {SearchUser} from "./Components/SearchPage/SearchUser"
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 
 export const UserContext = React.createContext(null)
@@ -74,7 +77,13 @@ function App() {
           path="additionaldetails"
           element={<SignUpDetailsPage motion={motion} />}
         />
-        <Route path="search" element={<SearchPage motion={motion} />} />
+          <Route path="search" element={<SearchPage motion={motion} />}>
+            <Route path="type" element={<SearchType motion={motion} />} />
+            <Route path="user" element={<SearchUser motion={motion} />}/> 
+        {/* <Route path="search/group" element={<SearchGroup motion={motion} />}/>  */}
+
+          </Route>
+          <Route path="results/:searchMode" element={<SearchResultsPage motion={motion} />}/>
 
         <Route path="userprofile" element={<ProfilePage motion={motion} />} />
         <Route path="userprofile/:pageOwnerUserId" element={<ProfilePage motion={motion} />} />
