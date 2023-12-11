@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CategoryDropDown } from "../Components/CategoryDropDown/CategoryDropDown";
 import axios from "axios";
 import { UserProfileModal } from "../Components/SearchPage/UserProfileModal";
+import { Outlet } from "react-router-dom";
 
 export const SearchPage = ({ motion }) => {
   // const [user, setUser] = useState({ user: "", password: "" });
@@ -131,7 +132,8 @@ export const SearchPage = ({ motion }) => {
     <>
       <>
         <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em]">
-          <motion.div
+        <Outlet />
+          {/* <motion.div
             className="flex flex-col w-full lg:w-[30%] justify-between"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -179,9 +181,10 @@ export const SearchPage = ({ motion }) => {
                   className="secondary-cta-btn w-[100%] lg:w-[100%]"
                 />
               </form>
+              <Outlet/>
             </div>
           </motion.div>
-          {/* MODALS GO HERE */}
+
           {userProfileModalToggle && (
             <UserProfileModal
               removeModal={removeModal}
@@ -193,7 +196,7 @@ export const SearchPage = ({ motion }) => {
               onClick={removeModal}
               className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
             ></div>
-          )}
+          )} */}
         </div>
       </>
     </>
