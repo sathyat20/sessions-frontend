@@ -50,10 +50,6 @@ export const SearchUser = ({ motion }) => {
 
   return (
       <div className = 'w-full '>
-      {console.log(filterCriteria)}
-      {console.log('this is a test')}
-      {console.log(Object.values({}).some((value)=>!value))}
-
           <div className="flex flex-col justify-around pt-[2em] gap-[2em] h-[100%] lg:h-[45%] w-full">
           <h1 className = 'text-4xl font-bold '> USER SEARCH</h1>
           <section className = 'flex flex-row flex-wrap justify-center flex-initial'>
