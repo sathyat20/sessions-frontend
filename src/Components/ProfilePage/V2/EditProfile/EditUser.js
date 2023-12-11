@@ -22,6 +22,7 @@ export function EditUser({ pageOwnerInfo }) {
 const careerStatusList = [
     {value:'Amateur', label:'Amateur(I play for fun)'},
     {value:'Semi-Pro', label:'Semi-Pro(I sometimes make a few bucks playing)'},
+    {value: 'Full-time music student', label:'Full-time music student'},
     {value:'Professional', label:'Professional(This is my full time job)'},
     {value:'Educator', label:'Educator'},
   ]
@@ -118,11 +119,10 @@ const careerStatusList = [
                   />
                   : userInfo.fullName}
               <br />
-              experience
           </section>
           <br />
           <section id='Career Role'>
-              <p className="font-bold text-slate-800 text-sm">Role:</p> I am a/an &nbsp;
+              <p className="font-bold text-slate-800 text-sm">Role:</p> I am a &nbsp;
               {isBeingEdited ?
                   <Select // we need to figure out how to style this...
                       size="10"
@@ -131,9 +131,9 @@ const careerStatusList = [
                       onChange={(e) => handleSelectChange(e)}
                   />
                   : userInfo.careerStatus}
-                  {userInfo.careerStatus !== 'Amateur' ? 
+                  {userInfo.careerStatus !== 'Amateur' && userInfo.experience ? 
                   
-                  <div> with 
+                  <div> with &nbsp;
                   {isBeingEdited ? 
                     <input
                       type="text"
@@ -144,7 +144,7 @@ const careerStatusList = [
                   />
                   : userInfo.experience
                   }
-                  years of experience</div>
+                  &nbsp;years of experience</div>
                   : null}
           </section>
           <br />

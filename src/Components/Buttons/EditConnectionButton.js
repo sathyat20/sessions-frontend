@@ -15,13 +15,11 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
                     headers: { Authorization: localStorage.getItem("token") },
                 }
             );
-            console.log(connections)
             const pulledIds = {};
             connections.data.forEach((connection) => {
                 const usersConnection = connection.requesterRelation ? connection.requesterRelation : connection.requestedRelation
                 pulledIds[usersConnection.id] = connection.status;
                 })
-                console.log(pulledIds)
             if (requestedId in pulledIds && pulledIds[requestedId] === 'confirmed') {
                 setMode('delete');
             } else if (requestedId in pulledIds && pulledIds[requestedId] === 'pending') {
@@ -73,11 +71,11 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
 
         const buttonIcon = () => {
             if (mode === 'add') {
-                return <UserPlusIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+                return <UserPlusIcon className="h-6 w-6 text-white cursor-pointer" />
             } else if (mode === 'delete') {
-                return <UserMinusIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+                return <UserMinusIcon className="h-6 w-6 text-white cursor-pointer" />
             } else if (mode === 'pending') {
-                return <UserPlusIcon className="h-6 w-6 text-red-500" /> // grey this out later
+                return <UserPlusIcon className="h-6 w-6 text-slate-500" /> // grey this out later
             }
         } 
             

@@ -40,7 +40,7 @@ export const NavBar = () => {
     <>
       {navToggle && (
         <nav>
-          <NavLink to="search">
+          <NavLink to="search/type">
             <MusicalNoteIcon className="h-6 w-6 scale-[130%] origin-center nav rounded-[50%]" />
           </NavLink>
           <NavLink to="jamchatroom">

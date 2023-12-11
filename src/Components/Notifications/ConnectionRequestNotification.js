@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-export const ConnectionRequestNotification = ({ userId, notification}) => {
+export const ConnectionRequestNotification = ({ userId, notification, setNotificationStatusToggled}) => {
     const [sourceUserInfo, setSourceUserInfo] = useState(null);
     const [isSeen, setIsSeen] = useState(false);
     
     useEffect(() => {
-        console.log('foo')
         const getUserInfo = async () => {
           if (notification.sourceId) {
           const sourceInfo = await axios.get(
@@ -42,6 +41,7 @@ export const ConnectionRequestNotification = ({ userId, notification}) => {
               headers: { Authorization: localStorage.getItem("token") },
             }
           );
+          setNotificationStatusToggled(true)
           setIsSeen(true);       
     }
 
@@ -61,6 +61,7 @@ export const ConnectionRequestNotification = ({ userId, notification}) => {
               headers: { Authorization: localStorage.getItem("token") },
             }
           );
+          setNotificationStatusToggled(true)
           setIsSeen(true);
     }
 

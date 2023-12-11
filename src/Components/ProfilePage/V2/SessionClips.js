@@ -21,7 +21,9 @@ export function SessionClips({ displayedUserId }) {
     
     const displayedClips = clipsList.data?.map((clip) => {     
       return (
+        <div className = 'pr-[0.5em]'>
         <VideoTile videoId = {clip.id} videoUrl = {clip.hostUrl}/>
+        </div>
       );
     });
   
@@ -32,9 +34,11 @@ export function SessionClips({ displayedUserId }) {
             <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left w-full">
                 SESSION CLIPS
             </h1>
+            
             <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em] flex flex-row justify-start w-full h-full overflow-scroll">
                 {displayedClips}
             </div>
+  
         </div>
     );
   }

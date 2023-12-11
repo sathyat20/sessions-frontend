@@ -1,5 +1,5 @@
 nav {
-  @apply flex flex-row scale-100 justify-around fixed bottom-0 w-full pt-[1em] pb-[1.2em] align-middle z-10 px-[1em];
+  @apply flex flex-row scale-100 justify-around fixed bottom-0 w-full pt-[1em] pb-[1.2em] align-middle px-[1em] z-10 bg-slate-100 border-t border-black;
 }
 
 nav a {
