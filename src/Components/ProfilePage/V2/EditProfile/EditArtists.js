@@ -156,16 +156,9 @@ export function EditArtists({ displayedUserId }) {
           </div>
         ) : null}
       </div>
-      <div className="flex flex-row flex-wrap text-[1.5rem] font-semibold leading-[1.2em] pr-[1em] w-[80%]">
+      <div className="flex flex-row flex-wrap text-lg font-semibold leading-[1.2em] w-[80%]">
         {artistText}
       </div>
-      {/* <button
-        onClick={() => {
-          console.log(artistText);
-        }}
-      >
-        Hey
-      </button> */}
       {isBeingEdited ? newArtistInput : null}
     </div>
   );

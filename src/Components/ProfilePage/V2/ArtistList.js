@@ -25,19 +25,23 @@ export function ArtistList({ displayedUserId }) {
     return (
       <div className="" key={index} id={artist}>
         {artist.toUpperCase() + " "}
-        /&nbsp;
+        {index !== artistsList.length -1 ? 
+        '/'
+        :null
+      }
+      &nbsp;
       </div>
     );
   });
 
   return (
-    <div>
+    <div className = 'py-[1em]'>
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left ">
           FAVOURITE ARTISTS
         </h1>  
       </div>
-      <div className="flex flex-row flex-wrap text-[1.5rem] font-semibold leading-[1.2em] pr-[1em] w-[80%]">
+      <div className="flex flex-row flex-wrap text-lg font-semibold leading-[1.2em] w-[80%]">
         {artistText}
       </div>
     </div>

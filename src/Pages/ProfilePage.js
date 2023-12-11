@@ -12,20 +12,25 @@ import { EditConnectionButton } from "../Components/Buttons/EditConnectionButton
 import { NotificationsButton } from "../Components/Buttons/NotificationsButton"
 import { StartChatButton } from "../Components/Buttons/StartChatButton"
 import { ArrowLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import {NotificationsModal} from '../Components/Buttons/NotificationsModal';
 import axios from "axios";
 
 export const ProfilePage = ({ motion, loggedInUserId }) => {
   const {pageOwnerUserId} = useParams()
   const context = useContext(UserContext);
   const [userId, setUserId] = useState(null);
+  const [notifications, setNotifications] = useState([])
   const [editProfileModalToggle, setEditProfileModalToggle] = useState(false);
+  const [notificationsModalToggle, setNotificationsModalToggle] = useState(false);
+  const [notificationReadStatus, setNotificationReadStatus] = useState(true)
+  const [notificationStatusToggled, setNotificationStatusToggled] = useState(false)
   const [pageOwnerInfo, setPageOwnerInfo] = useState(null);
   const [isOwnPage, setIsOwnPage] = useState(null)
   const navigate = useNavigate();
 
+  //Load info for the current user being displayed(also retrieved the logged in user's id)
   useEffect(() => {
       const getUserInfo = async () => {
-        // if (pageOwnerUserId) {
         const pulledPageOwnerInfo = await axios.get(
           `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerUserId ? pageOwnerUserId : 'getCurrentUser'}`,
           {
@@ -35,10 +40,33 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
         setPageOwnerInfo({...pulledPageOwnerInfo.data.user});
         setUserId(pulledPageOwnerInfo.data.ownId)
         setIsOwnPage(pulledPageOwnerInfo.data.ownId === parseInt(pulledPageOwnerInfo.data.user.id))
-        // }
       };
       getUserInfo();
   }, [pageOwnerUserId, userId]);
+
+  //Load notifications for the logged in user
+  useEffect(() => {
+    const getNotifications = async () => {
+        const retrievedNotifications = await axios.get(
+            `${process.env.REACT_APP_BACKEND_URL}/notifications/`,
+            {
+                headers: { Authorization: localStorage.getItem("token") },
+            }
+        )
+        const readStatus = retrievedNotifications.data.notifications.reduce((acc, notification)=>{
+          return acc && notification.hasBeenViewed
+        }, true)
+        setNotificationReadStatus(readStatus)
+        setNotifications([...retrievedNotifications.data.notifications])
+    }
+    if (isOwnPage) {
+      getNotifications();
+    }
+}, [notificationStatusToggled, isOwnPage]);
+
+  const removeNotificationsModal = () => {
+    setNotificationsModalToggle(false);
+  };
 
   const handleEditProfileModal = () => {
     //may need some code to pass in the user ID here
@@ -81,7 +109,12 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
                           <button className='text-white' onClick={() => { handleEditProfileModal() }}>
                             <PencilSquareIcon className="h-6 w-6 text-white cursor-pointer" />
                           </button>
-                          <NotificationsButton userId={pageOwnerUserId} />
+                          <NotificationsButton 
+                          userId={pageOwnerUserId} 
+                          notificationReadStatus = {notificationReadStatus} 
+                          notificationsModalToggle = {notificationsModalToggle} 
+                          setNotificationsModalToggle={setNotificationsModalToggle} 
+                          />
                         </div>
                         : null}
                         {!isOwnPage && userId ? 
@@ -117,7 +150,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             )}
 
             {pageOwnerInfo ? (
-              <div className="font-bold text-slate-800 text-sm flex flex-col  ">
+              <div className="font-bold text-slate-800 text-sm flex flex-col py-[2em] ">
                 <div className="flex flex-row">
                   <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
                     BIO
@@ -134,8 +167,6 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
                 displayedUserId={pageOwnerInfo.id}
               />
             )}
-
-            Placeholder for favourite songs
 
             {pageOwnerInfo && (
               <Qualifications
@@ -168,16 +199,30 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
         
         {/* MODALS GO HERE */}
         {editProfileModalToggle && (
-            <EditProfileModal
-              removeModal={removeModal}
-            />
-          )}
-          {editProfileModalToggle && (
-            <div
-              onClick={removeModal}
-              className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
-            ></div>
-          )}          
+          <EditProfileModal
+            removeModal={removeModal}
+          />
+        )}
+        {editProfileModalToggle && (
+          <div
+            onClick={removeModal}
+            className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
+          ></div>
+        )}
+        {notificationsModalToggle && (
+          <NotificationsModal
+            notifications={notifications}
+            userId={userId}
+            setNotificationStatusToggled={setNotificationStatusToggled}
+            removeModal = {removeNotificationsModal }
+          />
+        )}
+        {notificationsModalToggle && (
+          <div
+            onClick={removeNotificationsModal}
+            className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
+          ></div>
+        )}
       </div>
     </>
   );

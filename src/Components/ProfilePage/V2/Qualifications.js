@@ -29,16 +29,13 @@ export function Qualifications({ displayedUserId }) {
     })
 
     return (
-        <section>
-        {qualificationRows.every((item)=>item === '') ? null : 
-        <div>
-        <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">QUALIFICATIONS</h1>
-        {qualificationRows}
-        </div>
-        }
-        
-            
-        
+        <section className='py-[1em]'>
+            {qualificationRows.every((item) => item === '') ? null :
+                <div>
+                    <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">QUALIFICATIONS</h1>
+                    {qualificationRows}
+                </div>
+            }
         </section>
     );
 }

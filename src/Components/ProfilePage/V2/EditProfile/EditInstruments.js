@@ -100,7 +100,6 @@ export function EditInstruments({ displayedUserId }) {
   const removeRow = (index) => {
     setUserInstrumentsList((prevState) => {
       prevState.splice(index, 1);
-      console.log(prevState);
       return [...prevState];
     });
   };
@@ -114,7 +113,6 @@ export function EditInstruments({ displayedUserId }) {
   };
 
   const handleInstrumentChange = (e) => {
-    console.log(e)
     setNewInstrument((prevState) => {
       return { ...prevState, instrument: e };
     });
