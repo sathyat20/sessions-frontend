@@ -6,19 +6,25 @@ import React, { useEffect, useState } from "react";
 export function NotificationsButton({userId}) {
     const [notificationsModalToggle, setNotificationsModalToggle] = useState(false);
     const [notifications, setNotifications] = useState([])
+    const [notificationReadStatus, setNotificationReadStatus] = useState(true)
+    const [notificationStatusToggled, setNotificationStatusToggled] = useState(false)
 
     useEffect(() => {
         const getNotifications = async () => {
             const retrievedNotifications = await axios.get(
-                `${process.env.REACT_APP_BACKEND_URL}/notifications/${userId}`,
+                `${process.env.REACT_APP_BACKEND_URL}/notifications/`,
                 {
                     headers: { Authorization: localStorage.getItem("token") },
                 }
             )
-            setNotifications(retrievedNotifications.data.notifications)
+            const readStatus = retrievedNotifications.data.notifications.reduce((acc, notification)=>{
+              return acc && notification.hasBeenViewed
+            }, true)
+            setNotificationReadStatus(readStatus)
+            setNotifications([...retrievedNotifications.data.notifications])
         }
         getNotifications();
-    }, []);
+    }, [notificationStatusToggled]);
 
       const removeModal = () => {
         setNotificationsModalToggle(false);
@@ -26,9 +32,12 @@ export function NotificationsButton({userId}) {
 
       return (
         <div>
-        {console.log(notifications)}
             <label for={`notifications-${userId}`} >
-            <BellIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+            {notificationReadStatus ? 
+              <BellIcon className="h-6 w-6 text-white cursor-pointer" /> :
+              <BellIcon className="h-6 w-6 text-yellow-400 cursor-pointer animate-bounce" />
+            }
+            
             </label>
             <button
                 id={`notifications-${userId}`}
@@ -39,6 +48,7 @@ export function NotificationsButton({userId}) {
             <NotificationsModal
               notifications={notifications}
               userId={userId}
+              setNotificationStatusToggled = {setNotificationStatusToggled}
             />
           )}
           {notificationsModalToggle && (

@@ -42,7 +42,7 @@ export function Connections({ displayedUserId }) {
     return (
         <div>
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">CONNECTIONS</h1>
-        <div className = 'flex flex-row'>
+        <div className = 'flex flex-row overflow-x-scroll'>
             {displayedConnections}
         </div>
         </div>

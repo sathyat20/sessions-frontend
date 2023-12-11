@@ -19,7 +19,7 @@ export function InstrumentList({ displayedUserId }) {
     }, [displayedUserId]);
 
     return (
-        <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
+        <h1 className="font-bold text-[1.2rem] text-center">
             {userInstrumentsList.map((entry, index) => {
                 return (
                     entry.instrument.label.toUpperCase() +
