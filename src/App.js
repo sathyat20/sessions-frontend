@@ -27,46 +27,55 @@ import { SingleJamRoomPage } from "./Pages/SingleJamRoomPage.js";
 import { SignUpPictureUpload } from "./Pages/SignUpPictureUpload.js";
 import { GroupsPage } from "./Pages/GroupsPage";
 import { GroupDetailPage } from "./Pages/GroupDetailPage";
+import { NewGroupPage } from "./Pages/NewGroupPage";
 
 export const UserContext = React.createContext(null)
 
 function App() {
   const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
   const [userName, setUserName] = useState(null)
   const context = {userId, setUserId, userName, setUserName};
 
   return (
     <>
-    <UserContext.Provider value={context}>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<LandingPage motion={motion} />} />
-        <Route path="login" element={<LoginPage motion={motion} />} />
-        <Route path="signup" element={<SignUpPage motion={motion} />} />
-        <Route
-          path="profilepictureupload"
-          element={<SignUpPictureUpload motion={motion} />}
-        />
-        <Route
-          path="additionaldetails"
-          element={<SignUpDetailsPage motion={motion} />}
-        />
-        <Route path="search" element={<SearchPage motion={motion} />} />
+      <UserContext.Provider value={context}>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<LandingPage motion={motion} />} />
+          <Route path="login" element={<LoginPage motion={motion} />} />
+          <Route path="signup" element={<SignUpPage motion={motion} />} />
+          <Route
+            path="profilepictureupload"
+            element={<SignUpPictureUpload motion={motion} />}
+          />
+          <Route
+            path="additionaldetails"
+            element={<SignUpDetailsPage motion={motion} />}
+          />
+          <Route path="search" element={<SearchPage motion={motion} />} />
 
-        <Route path="userprofile" element={<ProfilePage motion={motion} />} />
-        <Route path="userprofile/:pageOwnerUserId" element={<ProfilePage motion={motion} />} />
-        <Route
-          path="jamchatroom"
-          element={<JamChatroomPage motion={motion} />}
-        ></Route>
+          <Route path="userprofile" element={<ProfilePage motion={motion} />} />
+          <Route
+            path="userprofile/:pageOwnerUserId"
+            element={<ProfilePage motion={motion} />}
+          />
+          <Route
+            path="jamchatroom"
+            element={<JamChatroomPage motion={motion} />}
+          ></Route>
 
-        <Route
-          path="/:chatroomId/jamroom"
-          element={<SingleJamRoomPage motion={motion} />}
-        />
-        <Route path="groups" element={<GroupsPage motion={motion} />} />
-        <Route path="/group/:groupId" element={<GroupDetailPage />} />
-      </Routes>
+          <Route
+            path="/:chatroomId/jamroom"
+            element={<SingleJamRoomPage motion={motion} />}
+          />
+          <Route path="/newgroup" element={<NewGroupPage motion={motion} />} />
+          <Route path="groups" element={<GroupsPage motion={motion} />} />
+          <Route
+            path="/group/:groupId"
+            element={<GroupDetailPage motion={motion} />}
+          />
+        </Routes>
       </UserContext.Provider>
     </>
   );
