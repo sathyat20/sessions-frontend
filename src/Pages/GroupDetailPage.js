@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { EditGroupModal } from "../Components/GroupsPage/EditGroupModal";
+import { VideoTile } from "../Components/VideoTile";
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
   const { group } = location.state || {};
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const toggleEditModal = () => {
+    setShowEditModal(!showEditModal);
+  };
 
   // Render group details
   return (
@@ -14,6 +22,10 @@ export const GroupDetailPage = ({ motion }) => {
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
               {/* Header */}
+              <button onClick={toggleEditModal} className="edit-button-styles">
+                <PencilSquareIcon className="icon-styles" />
+                Edit Group
+              </button>
               <div className="mb-8">
                 {group.profilePictureUrl && (
                   <img
@@ -22,6 +34,7 @@ export const GroupDetailPage = ({ motion }) => {
                     className="mx-auto h-48 w-full object-cover rounded"
                   />
                 )}
+
                 <div className="h-1 w-50 bg-yellow-500 mx-2 mt-2"></div>
                 <div className="h-1 w-50 bg-yellow-500 mx-2"></div>
                 <h1 className="text-4xl font-bold">{group.groupName}</h1>
@@ -41,15 +54,19 @@ export const GroupDetailPage = ({ motion }) => {
                     SEE ALL
                   </button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex overflow-x-auto space-x-4">
                   {group.videoClips &&
                     group.videoClips.map((clip, index) => (
-                      <div key={index} className="w-full md:w-1/3 p-2">
-                        <video
+                      <div
+                        key={index}
+                        className="flex-none "
+                      >
+                        {/* <video
                           src={clip.hostUrl}
                           controls
                           className="w-full h-auto"
-                        ></video>
+                        ></video> */}
+                        <VideoTile videoId={index} videoUrl={clip.hostUrl} />
                       </div>
                     ))}
                 </div>
@@ -74,18 +91,18 @@ export const GroupDetailPage = ({ motion }) => {
                   </button>
                 </div>
                 <div className="flex flex-wrap">
-                  {group.Users &&
-                    group.Users.map((user, index) => (
+                  {group.userGroups &&
+                    group.userGroups.map((userGroup, index) => (
                       <div key={index} className="relative">
                         <img
                           src={
-                            user.profilePictureUrl || "default_image_path.jpg"
+                            userGroup.user.profilePictureUrl || "default_image_path.jpg"
                           }
-                          alt={user.fullName}
+                          alt={userGroup.user.fullName}
                           className="h-24 w-24 object-cover rounded-t rounded-b"
                         />
                         <span className="absolute bottom-0 left-0 right-0 w-full text-center text-white bg-black bg-opacity-50 px-1 py-0.5 text-sm">
-                          {user.fullName}
+                          {userGroup.user.fullName}
                         </span>
                       </div>
                     ))}
@@ -97,6 +114,7 @@ export const GroupDetailPage = ({ motion }) => {
           <p className="text-center">Loading group details...</p>
         )}
       </div>
+      {showEditModal && <EditGroupModal removeModal={toggleEditModal} />}
     </div>
   );
 };
