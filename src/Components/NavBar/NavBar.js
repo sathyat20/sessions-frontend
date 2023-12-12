@@ -9,7 +9,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { MusicalNoteIcon } from "@heroicons/react/24/solid";
 import { UserGroupIcon } from "@heroicons/react/24/solid";
 
-
 // Import specific styling
 import "./NavBar.css";
 

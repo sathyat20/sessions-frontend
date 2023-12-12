@@ -36,11 +36,12 @@ const careerStatusList = [
   const writeData = async () => {
     const response = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerInfo.id}/`, // to edit later
-       userInfo ,
+       userInfo,
       {
         headers: { Authorization: localStorage.getItem("token") },
       }
     );
+    console.log(response.data)
     setUserInfo(response.data.editedUser[1][0]);
     setIsBeingEdited(false);
   };

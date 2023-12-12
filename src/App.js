@@ -34,7 +34,6 @@ import {SearchType} from "./Components/SearchPage/SearchType"
 import {SearchInput} from "./Components/SearchPage/SearchInput.js"
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 
-
 export const UserContext = React.createContext(null)
 
 function App() {
