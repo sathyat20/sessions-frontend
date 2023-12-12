@@ -68,7 +68,7 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
     if(!isSeen) {
     return (
         <div className="flex flex-row">
-            <div className="aspect-square mr-[1em] rounded-[50%] overflow-hidden h-[5em] w-6em">
+            <div className="aspect-square mr-[1em] rounded-[50%] overflow-hidden h-[5em] w-[6em]">
                 <img
                     src={sourceUserInfo ? sourceUserInfo.profilePictureUrl : null}
                     alt="face"

@@ -56,7 +56,9 @@ export const EditProfileModal = ({ removeModal }) => {
               {pageOwnerInfo ?
                 <div>
                   <EditPic displayedUserId={userId} storedURL={pageOwnerInfo.profilePictureUrl} />
+                  <hr/>
                   <EditUser pageOwnerInfo={pageOwnerInfo} />
+                  <hr />
                   <EditClips displayedUserId={userId} />
                   <EditInstruments displayedUserId={userId} />
                   <EditGenres displayedUserId={userId} />

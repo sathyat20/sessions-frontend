@@ -152,7 +152,7 @@ export function EditGenres({ displayedUserId }) {
           </div>
         ) : null}
       </div>
-      <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em]">
+      <div className=" flex flex-row flex-wrap text-lg font-semibold leading-[1.2em]">
         {genreText}
       </div>
       {isBeingEdited ? newGenreInput : null}

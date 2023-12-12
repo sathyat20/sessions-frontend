@@ -38,9 +38,9 @@ export const UserContext = React.createContext(null)
 
 function App() {
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null);
-  const context = {userId, setUserId, userName, setUserName}
-
+  // const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
+  const [userName, setUserName] = useState(null)
+  const context = {userId, setUserId, userName, setUserName};
 
   useEffect(() => {
     let TOKEN = localStorage.getItem("token");

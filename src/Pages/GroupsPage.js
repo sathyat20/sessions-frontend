@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {UserContext} from "../App";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 export const GroupsPage = ({ motion }) => {
   const [tokenAuth, setTokenAuth] = useState(null);
@@ -47,6 +48,7 @@ export const GroupsPage = ({ motion }) => {
 
   return (
     <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em]">
+      
       <motion.div
         className="flex flex-col w-full lg:w-[30%] justify-start text-center"
         initial={{ x: "20", opacity: 0 }}

@@ -34,14 +34,16 @@ const careerStatusList = [
   };
 
   const writeData = async () => {
+    const response = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerInfo.id}/`, // to edit later
+       userInfo,
+      {
+        headers: { Authorization: localStorage.getItem("token") },
+      }
+    );
+    console.log(response.data)
+    setUserInfo(response.data.editedUser[1][0]);
     setIsBeingEdited(false);
-    // await axios.put(
-    //   `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`, // to edit later
-    //   { artistsList },
-    //   {
-    //     headers: { Authorization: localStorage.getItem("token") },
-    //   }
-    // );
   };
 
   const revertData = async () => {
@@ -52,8 +54,7 @@ const careerStatusList = [
       }
     );
     setIsBeingEdited(false);
-    console.log(storedUserInfo)
-    setUserInfo(null); // we need to edit this later based on what comes out of storedUserInfo
+    setUserInfo(storedUserInfo.data.user); // we need to edit this later based on what comes out of storedUserInfo
   }
 
     const userInfoChange = (e) => {
@@ -65,8 +66,7 @@ const careerStatusList = [
     }
 
   return (
-    <div>
-    <hr />
+    <div className = 'py-[1em]'>
     {console.log(userInfo)}
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left ">
@@ -111,10 +111,11 @@ const careerStatusList = [
               <p className="font-bold text-slate-800 text-sm">Full Name: &nbsp;</p> 
               {isBeingEdited ? // figure out why the font bold isn;t working
                   <input
-                      type="text"
-                      id="editUsername"
-                      placeholder="Full Name"
-                      value={userInfo.fullName}
+            className='border border-slate-300'
+            type="text"
+            id="fullName"
+            placeholder="Full Name"
+            value={userInfo.fullName}
                       onChange={(e) => { userInfoChange(e); }}
                   />
                   : userInfo.fullName}
@@ -131,34 +132,40 @@ const careerStatusList = [
                       onChange={(e) => handleSelectChange(e)}
                   />
                   : userInfo.careerStatus}
-                  {userInfo.careerStatus !== 'Amateur' && userInfo.experience ? 
-                  
-                  <div> with &nbsp;
+
+                  &nbsp;
+
                   {isBeingEdited ? 
-                    <input
+                  <p>
+                  with &nbsp; 
+                  <input
+                    className = 'border border-slate-300'
                       type="text"
+                      size = "1"
                       id="experience"
-                      placeholder="Exp."
                       value={userInfo.experience}
                       onChange={(e) => { userInfoChange(e); }}
                   />
-                  : userInfo.experience
+                  &nbsp; years of experience
+                  </p>
+                  :  userInfo.careerStatus !== 'Amateur' && pageOwnerInfo.experience ? 
+                  `with ${userInfo.experience} years of experience` : null
                   }
-                  &nbsp;years of experience</div>
-                  : null}
+          
           </section>
           <br />
           <section id = 'Bio' className="flex flex-col ">
-              <p className="font-bold text-slate-800 text-sm">BIO:</p>
+              <p className="font-bold text-slate-800 text-sm ">BIO:</p>
               {isBeingEdited ? (
-                  <div className='bg-white'>
+                  <div className='bg-white flex justify-center'>
                       <textarea
+                      className='border border-slate-300'
                           type="text"
                           id="bio"
                           placeholder="Bio"
                           value={userInfo.bio}
                           rows="6"
-                          cols="50"
+                          cols="37"
                           onChange={(e) => { userInfoChange(e); }}
                       />
                   </div>
