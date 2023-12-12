@@ -31,7 +31,7 @@ import { GroupsPage } from "./Pages/GroupsPage";
 import { GroupDetailPage } from "./Pages/GroupDetailPage";
 import { NewGroupPage } from "./Pages/NewGroupPage";
 import {SearchType} from "./Components/SearchPage/SearchType"
-import {SearchUser} from "./Components/SearchPage/SearchUser"
+import {SearchInput} from "./Components/SearchPage/SearchInput.js"
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 
 
@@ -81,8 +81,7 @@ function App() {
         />
           <Route path="search" element={<SearchPage motion={motion} />}>
             <Route path="type" element={<SearchType motion={motion} />} />
-            <Route path="user" element={<SearchUser motion={motion} />}/> 
-        {/* <Route path="search/group" element={<SearchGroup motion={motion} />}/>  */}
+            <Route path=":searchMode" element={<SearchInput motion={motion} />}/> 
 
           </Route>
           <Route path="results/:searchMode" element={<SearchResultsPage motion={motion} />}/>
