@@ -16,7 +16,7 @@ export function EditMemberButton({groupId, editMemberModalToggle, setEditMemberM
         return (
             <div>
                 <label for={`editmember-${groupId}`} >
-                    <UserGroupIcon className="h-6 w-6 text-black cursor-pointer" />
+                    <UserGroupIcon className="h-6 w-6 text-white cursor-pointer" />
                 </label>
                 <button
                     id={`editmember-${groupId}`}

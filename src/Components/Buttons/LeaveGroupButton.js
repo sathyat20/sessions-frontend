@@ -19,7 +19,7 @@ export function LeaveGroupButton({userId, groupId}) {
       return (
         <div>
             <label for={`leavegroup-${userId}-${groupId}`} >
-              <ArrowRightOnRectangleIcon className="h-6 w-6 text-black cursor-pointer" /> :
+              <ArrowRightOnRectangleIcon className="h-6 w-6 text-white cursor-pointer" /> 
             </label>
             <button
                 id={`leavegroup-${userId}-${groupId}`}

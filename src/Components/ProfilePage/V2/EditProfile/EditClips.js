@@ -46,8 +46,6 @@ export function EditClips({ displayedUserId }) {
         setNewVideo(null);
       })
     }
-  }
-
 
     const deleteClip = async (url, clipId, clipIndex) => {
       const response = window.confirm(`Delete clip?`)
@@ -81,8 +79,6 @@ export function EditClips({ displayedUserId }) {
         </div>
       );
     });
-  
-    
   
     return (
         <div className = 'my-4 p-2 border border-black'>
