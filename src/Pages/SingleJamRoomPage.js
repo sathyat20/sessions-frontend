@@ -84,9 +84,9 @@ export const SingleJamRoomPage = () => {
     socket.emit("join-room", chatroomId);
     if (tokenAuth && isAuthenticated) {
       console.log("STEP 2");
-      getChatroomDetails();
-      getChatroomInfo();
       getChatroomUsers();
+      getChatroomDetails();   
+      getChatroomInfo();   
       getChatroomAttachments();
     }
   }, [isAuthenticated, tokenAuth]);
@@ -165,7 +165,6 @@ export const SingleJamRoomPage = () => {
         headers: { Authorization: localStorage.getItem("token") },
       }
     );
-
     if (chatroomDetails.data.success === true) {
       setRoomDetails(chatroomDetails.data.data);
     } else {
@@ -180,7 +179,10 @@ export const SingleJamRoomPage = () => {
         headers: { Authorization: localStorage.getItem("token") },
       }
     );
-
+    const usersInRoom = allUsers.data.data.map((user)=>user.id)
+    if (!(usersInRoom.includes(userId))) {
+      navigate("/jamchatroom")
+    }
     if (allUsers.data.success === true) {
       setRoomUsers(allUsers.data.data);
     } else {

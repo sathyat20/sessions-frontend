@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/20/solid";
 // import { StartChatButton } from "../Components/Buttons/StartChatButton";
@@ -8,12 +8,21 @@ import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/20/solid";
 import { EditGroupModal } from "../Components/GroupsPage/EditGroupModal";
 import { VideoTile } from "../Components/VideoTile";
 import { GroupChatCreationModal } from "../Components/GroupsPage/GroupChatCreationModal";
+import axios from "axios";
+import {EditMemberModal} from "../Components/Buttons/EditMemberModal"
+import {EditMemberButton} from "../Components/Buttons/EditMemberButton"
+import {LeaveGroupButton} from "../Components/Buttons/LeaveGroupButton"
+import { GroupsPage } from "./GroupsPage";
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
-  const { group } = location.state || {};
+  const [group, setGroup] = useState(location?.state?.group ? location.state.group : null)
+  const [userId, setUserId] = useState(null);
+  const {groupId} = useParams()
+  const [editMemberModalToggle, setEditMemberModalToggle] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
+  const [editedInfoToggle, setEditedInfoToggle] = useState(false)
 
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
@@ -32,14 +41,46 @@ export const GroupDetailPage = ({ motion }) => {
   };
 
 
+  useEffect(() => {
+    const getGroupData = async () => {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      setGroup(response.data)
+    }
+    const getCurrentUser = async () => {
+      let currentUserInfo = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      setUserId(currentUserInfo.data.user.id);
+    };
+
+    if (!group || editedInfoToggle) {
+      getGroupData();
+      setEditedInfoToggle(false);
+    }
+    getCurrentUser();
+  }, [editedInfoToggle])
+
+  const removeEditMemberModal = () => {
+    setEditMemberModalToggle(false);
+  };
+
   // Render group details
   return (
     <div className="flex flex-row h-[100dvh]">
       <div className="flex-grow overflow-y-auto">
-        {/* {console.log(group)} */}
+        {console.log(editMemberModalToggle)}
         {group ? (
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
+              {/* Header */}
+
               <div className="mb-8">
                 {group.profilePictureUrl && (
                   <img
@@ -124,15 +165,38 @@ export const GroupDetailPage = ({ motion }) => {
         {/* Add your buttons and elements here */}
         {/* Example button */}
         <button className="edit-button-styles">
-          <UserPlusIcon className="h-6 w-6 text-white cursor-pointer" />
+          <EditMemberButton
+            groupId={group.id}
+            editMemberModalToggle={editMemberModalToggle}
+            setEditMemberModalToggle={setEditMemberModalToggle}
+            members={group.userGroups}
+            userId={userId}
+          />
         </button>
         <button onClick={toggleEditModal} className="edit-button-styles">
           <PencilSquareIcon className="h-6 w-6 text-white" />
         </button>
-        <button onClick={handleCreateChat} className="edit-button-styles mb-3">
+        <button onClick={handleCreateChat} className="edit-button-styles">
           <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white cursor-pointer" />
         </button>
+        <LeaveGroupButton userId={userId} groupId={group.id} />
       </div>
+
+      {editMemberModalToggle && (
+        <EditMemberModal
+          members={group.userGroups}
+          groupId={group.id}
+          userId={userId}
+          removeModal={removeEditMemberModal}
+          setEditedInfoToggle={setEditedInfoToggle}
+        />
+      )}
+      {editMemberModalToggle && (
+        <div
+          onClick={removeEditMemberModal}
+          className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
+        ></div>
+      )}
       {showEditModal && <EditGroupModal removeModal={toggleEditModal} />}
       {showChatModal && (
         <GroupChatCreationModal
