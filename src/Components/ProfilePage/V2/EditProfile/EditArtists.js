@@ -53,11 +53,13 @@ export function EditArtists({ displayedUserId }) {
   };
 
   const addArtist = () => {
+    if(newArtist) {
     setArtistsList((prevState) => {
       prevState.push(newArtist);
       return [...prevState];
     });
     setNewArtist("");
+  }
   };
 
   const removeArtist = (index) => {
@@ -115,7 +117,7 @@ export function EditArtists({ displayedUserId }) {
   );
 
   return (
-    <div>
+    <div className = 'pb-[80px]'>
     <hr />
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left ">

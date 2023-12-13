@@ -158,15 +158,16 @@ export function EditInstruments({ displayedUserId }) {
           value={newInstrument.instrument}
           onChange={(e) => handleInstrumentChange(e)}
         />
-      <div className = 'flex flex-row'>
+      
       <Select 
           defaultValue={{ value: "Qualification", label: "Qualification" }}
           size="10"
           options={fullQualificationsList}
-          value={newInstrument.highestQualification}//need to rework this into the react select format
+          value={{value: newInstrument.highestQualification, label: newInstrument.highestQualification}}//need to rework this into the react select format
           onChange={(e) => handleQualificationChange(e)}
         />
         <input
+        className = 'border border-black'
           placeholder="Institution"
           type="text"
           name="institution"
@@ -177,7 +178,7 @@ export function EditInstruments({ displayedUserId }) {
             inputChange(e);
           }}
         />
-        </div>
+
         <label for={`addRow-instruments`}>
           <PlusCircleIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
         </label>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 //need to add in the code to prevent this from displaying on nonadmins' pages
 export function EditMemberButton({groupId, editMemberModalToggle, setEditMemberModalToggle, members, userId}) {
 
-    const adminIds = members.map((member)=>{
+    const adminIds = members?.map((member)=>{
         if (member.isAdmin) {
             return member.userId
         } else {

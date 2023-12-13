@@ -49,11 +49,13 @@ export function EditGenres({ displayedUserId }) {
   };
 
   const addGenre = () => {
+    if(newGenre) {
     setGenresList((prevState) => {
       prevState.push(newGenre);
       return [...prevState];
     });
     setNewGenre("");
+  }
   };
 
   const removeGenre = (index) => {

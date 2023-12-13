@@ -52,7 +52,7 @@ export const EditProfileModal = ({ removeModal }) => {
           <div className="flex flex-row justify-center items-center h-[10%] gap-[0em] mb-[300px] lg:mb-[4em]">
 
 
-            <div className="flex flex-col gap-[1em] h-[100%] lg:w-[90%] md:w-[90%] w-[90%] py-[1em] ">
+            <div className="flex flex-col gap-[1em] h-[100%] lg:w-[90%] md:w-[90%] w-[90%] py-[3em] ">
               {pageOwnerInfo ?
                 <div>
                   <EditPic displayedUserId={userId} storedURL={pageOwnerInfo.profilePictureUrl} />
