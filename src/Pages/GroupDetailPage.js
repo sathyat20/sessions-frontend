@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { BellIcon } from "@heroicons/react/20/solid";
+// import { StartChatButton } from "../Components/Buttons/StartChatButton";
+import { UserPlusIcon, UserMinusIcon } from "@heroicons/react/20/solid";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/20/solid";
 import { EditGroupModal } from "../Components/GroupsPage/EditGroupModal";
 import { VideoTile } from "../Components/VideoTile";
+
+import { GroupChatCreationModal } from "../Components/GroupsPage/GroupChatCreationModal";
+
 import axios from "axios";
 import {EditMemberModal} from "../Components/Buttons/EditMemberModal"
 import {EditMemberButton} from "../Components/Buttons/EditMemberButton"
 import {LeaveGroupButton} from "../Components/Buttons/LeaveGroupButton"
 import { GroupsPage } from "./GroupsPage";
+
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
@@ -16,12 +24,29 @@ export const GroupDetailPage = ({ motion }) => {
   const {groupId} = useParams()
   const [editMemberModalToggle, setEditMemberModalToggle] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const [showChatModal, setShowChatModal] = useState(false);
+
   const [editedInfoToggle, setEditedInfoToggle] = useState(false)
 
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
   };
 
+  const openChatModal = () => {
+    setShowChatModal(true);
+  };
+
+  const closeChatModal = () => {
+    setShowChatModal(false);
+  };
+
+  const handleCreateChat = () => {
+    openChatModal();
+  };
+
+
+=
   useEffect(() => {
     const getGroupData = async () => {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
@@ -52,9 +77,10 @@ export const GroupDetailPage = ({ motion }) => {
     setEditMemberModalToggle(false);
   };
 
+
   // Render group details
   return (
-    <div className="flex flex-col h-[100dvh] pb-[4em]">
+    <div className="flex flex-row h-[100dvh]">
       <div className="flex-grow overflow-y-auto">
       
         {console.log(editMemberModalToggle)}
@@ -98,17 +124,11 @@ export const GroupDetailPage = ({ motion }) => {
                   <h2 className="text-3xl text-yellow-400 font-bold inline-block">
                     SESSION CLIPS
                   </h2>
-                  <button className="text-blue-800 hover:text-blue-600 inline-block ml-2">
-                    SEE ALL
-                  </button>
                 </div>
                 <div className="flex overflow-x-auto space-x-4">
                   {group.videoClips &&
                     group.videoClips.map((clip, index) => (
-                      <div
-                        key={index}
-                        className="flex-none "
-                      >
+                      <div key={index} className="flex-none ">
                         {/* <video
                           src={clip.hostUrl}
                           controls
@@ -134,17 +154,15 @@ export const GroupDetailPage = ({ motion }) => {
                   <h2 className="text-3xl text-yellow-400 font-bold inline-block">
                     MEMBERS
                   </h2>
-                  <button className="text-blue-800 hover:text-blue-600 inline-block ml-2">
-                    SEE ALL
-                  </button>
                 </div>
-                <div className="flex flex-wrap">
+                <div className="flex overflow-x-auto pb-6">
                   {group.userGroups &&
                     group.userGroups.map((userGroup, index) => (
                       <div key={index} className="relative">
                         <img
                           src={
-                            userGroup.user.profilePictureUrl || "default_image_path.jpg"
+                            userGroup.user.profilePictureUrl ||
+                            "default_image_path.jpg"
                           }
                           alt={userGroup.user.fullName}
                           className="h-24 w-24 object-cover rounded-t rounded-b"
@@ -163,6 +181,21 @@ export const GroupDetailPage = ({ motion }) => {
         )}
       </div>
 
+      <div className="h-[10em] w-[2em] absolute top-10 right-0 bg-blue-900 rounded-tl-md rounded-bl-md flex flex-col justify-between items-center py-4">
+        {/* Add your buttons and elements here */}
+        {/* Example button */}
+        <button className="edit-button-styles">
+          <UserPlusIcon className="h-6 w-6 text-white cursor-pointer" />
+        </button>
+        <button onClick={toggleEditModal} className="edit-button-styles">
+          <PencilSquareIcon className="h-6 w-6 text-white" />
+        </button>
+        <button onClick={handleCreateChat} className="edit-button-styles mb-3">
+          <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white cursor-pointer" />
+        </button>
+      </div>
+
+
       {editMemberModalToggle && (
           <EditMemberModal
             members={group.userGroups}
@@ -178,7 +211,15 @@ export const GroupDetailPage = ({ motion }) => {
             className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
           ></div>
         )}
+
       {showEditModal && <EditGroupModal removeModal={toggleEditModal} />}
+      {showChatModal && (
+        <GroupChatCreationModal
+          groupId={group.id}
+          groupName={group.groupName}
+          onClose={closeChatModal}
+        />
+      )}
     </div>
   );
 };

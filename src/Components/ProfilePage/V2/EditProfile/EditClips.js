@@ -45,8 +45,9 @@ export function EditClips({ displayedUserId }) {
         })
         setNewVideo(null);
       })
-
+    }
   }
+
 
     const deleteClip = async (url, clipId, clipIndex) => {
       const response = window.confirm(`Delete clip?`)
