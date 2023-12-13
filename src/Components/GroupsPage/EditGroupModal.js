@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { EditGroupPic } from "./EditGroupPic"
 import { EditGroup } from "./EditGroup";
-import { EditGroupName } from "./EditGroupName";
-import { EditBio } from "./EditBio";
-import { EditMembers } from "./EditMembers";
-// import other necessary components
-import axios from "axios";
+import { EditGroupClips } from "./EditGroupClips";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useLocation } from "react-router-dom";
 
@@ -37,9 +33,9 @@ export const EditGroupModal = ({ groupId, removeModal }) => {
                   groupId={group.id}
                   storedURL={group.profilePictureUrl}
                 />
-                <EditGroup
-                  groupInfo={group}
-                />
+                <EditGroup groupInfo={group} />
+                {console.log(group.id)}
+                <EditGroupClips displayedGroupId={group.id} />
               </div>
             ) : null}
           </div>

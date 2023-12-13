@@ -18,8 +18,14 @@ export const NewGroupPage = ({ motion }) => {
     navigate(`/groups`);
   };
 
-  const addVideoUrl = (url) => {
-    setVideoUrls(prevUrls => [...prevUrls, url]);
+    const getButtonClass = (value) => {
+      return `bg-blue-400 text-white rounded px-4 py-2 ${
+        isProfessional === value ? "bg-blue-700" : ""
+      }`;
+    };
+
+  const addVideoUrl = (urls) => {
+    setVideoUrls(prevUrls => [...prevUrls, ...urls]);
   }
 
   const handleSubmit = async () => {
@@ -68,7 +74,11 @@ export const NewGroupPage = ({ motion }) => {
         }}
       >
         <div className="flex flex-col items-center mb-4">
+          <div className="h-1 w-50 bg-blue-500 mx-2"></div>
+          <div className="h-1 w-50 bg-blue-500 mx-2"></div>
           <h2 className="text-2xl font-bold text-gray-800 my-2">NEW GROUP</h2>
+          <div className="h-1 w-50 bg-yellow-500 mx-2"></div>
+          <div className="h-1 w-50 bg-yellow-500 mx-2"></div>
           <div className="flex items-center justify-center w-full h-32 bg-gray-200 text-gray-500 rounded my-2">
             <GroupPictureUpload setProfilePictureUrl={setProfilePictureUrl} />
           </div>
@@ -101,13 +111,13 @@ export const NewGroupPage = ({ motion }) => {
             {/* Placeholder for session clip */}
             <button
               onClick={() => setIsProfessional(true)}
-              className="bg-blue-400 text-white rounded px-4 py-2"
+              className={getButtonClass(true)}
             >
               Professional
             </button>
             <button
               onClick={() => setIsProfessional(false)}
-              className="bg-blue-400 text-white rounded px-4 py-2"
+              className={getButtonClass(false)}
             >
               Amateur
             </button>
