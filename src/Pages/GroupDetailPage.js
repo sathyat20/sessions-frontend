@@ -7,12 +7,15 @@ import { UserPlusIcon, UserMinusIcon } from "@heroicons/react/20/solid";
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/20/solid";
 import { EditGroupModal } from "../Components/GroupsPage/EditGroupModal";
 import { VideoTile } from "../Components/VideoTile";
+
 import { GroupChatCreationModal } from "../Components/GroupsPage/GroupChatCreationModal";
+
 import axios from "axios";
 import {EditMemberModal} from "../Components/Buttons/EditMemberModal"
 import {EditMemberButton} from "../Components/Buttons/EditMemberButton"
 import {LeaveGroupButton} from "../Components/Buttons/LeaveGroupButton"
 import { GroupsPage } from "./GroupsPage";
+
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
@@ -39,7 +42,6 @@ export const GroupDetailPage = ({ motion }) => {
   const handleCreateChat = () => {
     openChatModal();
   };
-
 
   useEffect(() => {
     const getGroupData = async () => {
@@ -70,6 +72,7 @@ export const GroupDetailPage = ({ motion }) => {
   const removeEditMemberModal = () => {
     setEditMemberModalToggle(false);
   };
+
 
   // Render group details
   return (
@@ -161,10 +164,12 @@ export const GroupDetailPage = ({ motion }) => {
           <p className="text-center">Loading group details...</p>
         )}
       </div>
+
       <div className="h-[10em] w-[2em] absolute top-10 right-0 bg-blue-900 rounded-tl-md rounded-bl-md flex flex-col justify-between items-center py-4">
         {/* Add your buttons and elements here */}
         {/* Example button */}
         <button className="edit-button-styles">
+
           <EditMemberButton
             groupId={group.id}
             editMemberModalToggle={editMemberModalToggle}
@@ -172,6 +177,7 @@ export const GroupDetailPage = ({ motion }) => {
             members={group.userGroups}
             userId={userId}
           />
+
         </button>
         <button onClick={toggleEditModal} className="edit-button-styles">
           <PencilSquareIcon className="h-6 w-6 text-white" />

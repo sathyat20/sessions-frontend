@@ -42,10 +42,12 @@ export function EditGroupClips({ displayedGroupId }) {
     getClips();
   }, [displayedGroupId, isBeingEdited])
 
+
   const writeData = async (newClip) => {
     const fileRef = sRef(
       storage,
       `group-videoclips/${displayedGroupId}/${Date.now()}`
+
     );
     uploadBytes(fileRef, newClip)
       .then(() => getDownloadURL(fileRef))
@@ -64,6 +66,7 @@ export function EditGroupClips({ displayedGroupId }) {
         return addedClip;
       })
       .then((addedClip) => {
+
         if (addedClip.data && addedClip.data.newClip) {
     setClipsList(prevState => [addedClip.data.newClip, ...prevState]);
   } else {
@@ -102,6 +105,7 @@ const deleteClip = async (url, clipId, clipIndex) => {
 
   const displayedClips = clipsList.map((clip, index) => {
     return (
+
       <div className="relative m-2" key={clip.id}>
         <VideoTile videoId={clip.id} videoUrl={clip.hostUrl} />
         {console.log(sRef(clip.hostUrl))}
@@ -112,6 +116,7 @@ const deleteClip = async (url, clipId, clipIndex) => {
           >
             <XCircleIcon className="h-8 w-8 text-gray-500" />
           </div>
+
         )}
       </div>
     );
