@@ -179,9 +179,10 @@ export const GroupDetailPage = ({ motion }) => {
           />
 
         </button>
+        {
         <button onClick={toggleEditModal} className="edit-button-styles">
           <PencilSquareIcon className="h-6 w-6 text-white" />
-        </button>
+        </button>}
         <button onClick={handleCreateChat} className="edit-button-styles">
           <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white cursor-pointer" />
         </button>

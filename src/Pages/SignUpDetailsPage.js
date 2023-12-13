@@ -26,7 +26,7 @@ export const SignUpDetailsPage = ({ motion }) => {
 
   const handleClick = () => {
     console.log(userDetails);
-    navigate("/search");
+    navigate("/search/type");
   };
 
   const handleSubmit = (ev) => {
