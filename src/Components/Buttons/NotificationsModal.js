@@ -1,14 +1,23 @@
 import {ConnectionRequestNotification} from '../Notifications/ConnectionRequestNotification'
+import {GroupAddNotification} from '../Notifications/GroupAddNotification'
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export const NotificationsModal = ({ notifications, userId, setNotificationStatusToggled, removeModal }) => {
     
     const notificationRows = notifications.map((notification) => {
+      if (notification.originTable === 'connections'){
         return (
         <div>
         <ConnectionRequestNotification userId = {userId} notification = {notification} setNotificationStatusToggled = {setNotificationStatusToggled} />
         </div>
         )
+      } else if (notification.originTable = 'usersGroups') {
+        return (
+          <div>
+            <GroupAddNotification notification = {notification} setNotificationStatusToggled = {setNotificationStatusToggled} />
+          </div>
+        )
+      }
     })
 
     return (
@@ -21,7 +30,9 @@ export const NotificationsModal = ({ notifications, userId, setNotificationStatu
             <XMarkIcon className="h-6 w-6 text-txtcolor-secondary" />
           </div>
           <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">NOTIFICATIONS</h1>
+          <div className = 'flex flex-col items-start gap-1'>
           {notificationRows}
+          </div>
           </div>
     </>
   );
