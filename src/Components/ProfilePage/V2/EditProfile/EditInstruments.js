@@ -121,7 +121,7 @@ export function EditInstruments({ displayedUserId }) {
   const handleQualificationChange = (e) => {
     console.log(e)
     setNewInstrument((prevState) => {
-      return { ...prevState, highestQualification: e.label };
+      return { ...prevState, highestQualification: e };
     });
   };
 
@@ -152,6 +152,7 @@ export function EditInstruments({ displayedUserId }) {
   const newEntryRow = (
     <div className = 'flex flex-col'>
         <Select // we need to figure out how to style this...
+        className = 'my-[0.5em]'
           defaultValue={{ value: "Instrument", label: "Instrument" }}
           size="10"
           options={fullInstrumentsList}
@@ -160,14 +161,15 @@ export function EditInstruments({ displayedUserId }) {
         />
       
       <Select 
+      className = 'my-[0.5em]'
           defaultValue={{ value: "Qualification", label: "Qualification" }}
           size="10"
           options={fullQualificationsList}
-          value={{value: newInstrument.highestQualification, label: newInstrument.highestQualification}}//need to rework this into the react select format
+          value={newInstrument.highestQualification}//need to rework this into the react select format
           onChange={(e) => handleQualificationChange(e)}
         />
         <input
-        className = 'border border-black'
+        className = 'border border-black my-[0.5em]'
           placeholder="Institution"
           type="text"
           name="institution"
@@ -178,7 +180,8 @@ export function EditInstruments({ displayedUserId }) {
             inputChange(e);
           }}
         />
-
+        <div className = 'flex flex-row items-center my-[0.5em]'>
+        <p className = 'text-xl font-normal'>Add Instrument</p>
         <label for={`addRow-instruments`}>
           <PlusCircleIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
         </label>
@@ -187,7 +190,7 @@ export function EditInstruments({ displayedUserId }) {
           id={`addRow-instruments`}
           style={{ display: "none" }}
         />
-   
+        </div>
     </div>
   );
 
