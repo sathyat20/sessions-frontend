@@ -4,28 +4,35 @@ import { storage } from "../../firebase/firebase";
 import { ref as sRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { XCircleIcon, PencilSquareIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 
-export function EditGroupPic({ groupId, storedURL }) {
+export function EditGroupPic({ groupId, storedURL, onEditSaved }) {
   const [groupPicture, setGroupPicture] = useState(null);
   const [groupPictureURL, setGroupPictureURL] = useState(storedURL);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
 
-  const updateGroupPicture = async () => {
-    setIsBeingEdited(false);
-    const fileRef = sRef(storage, `grouppics/${groupId}`);
-    uploadBytes(fileRef, groupPicture)
-      .then(() => getDownloadURL(fileRef))
-      .then((url) => {
-        axios.put(
+const updateGroupPicture = async () => {
+  setIsBeingEdited(false);
+  const fileRef = sRef(storage, `grouppics/${groupId}`);
+  uploadBytes(fileRef, groupPicture)
+    .then(() => getDownloadURL(fileRef))
+    .then(async (url) => {
+      try {
+        await axios.put(
           `${process.env.REACT_APP_BACKEND_URL}/groups/edit/${groupId}`,
           {
             profilePictureUrl: url,
           },
           {
-            headers: { Authorization: localStorage.getItem("token") }, 
+            headers: { Authorization: localStorage.getItem("token") },
           }
         );
-      });
-  };
+        // Update the state to trigger a re-render
+        setGroupPictureURL(url);
+        onEditSaved(url);
+      } catch (error) {
+        console.error("Error updating group picture:", error);
+      }
+    });
+};
 
   const revertChanges = () => {
     setIsBeingEdited(false);

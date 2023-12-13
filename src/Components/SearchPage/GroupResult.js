@@ -40,7 +40,5 @@ export const GroupResult = ({result}) => {
                 {/* <p className="font-semibold">{user.instruments[0].name}</p> */}
             </div>
         </div>
-
-        
     )
 }

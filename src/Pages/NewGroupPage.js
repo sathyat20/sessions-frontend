@@ -36,19 +36,23 @@ export const NewGroupPage = ({ motion }) => {
 
     try {
       console.log(profilePictureUrl)
-      const response = await axios.post(`http://localhost:8080/groups/newgroup`, {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/groups/newgroup`,
+        {
           groupName,
-          isPublic: true, 
+          isPublic: true,
           ensembleType,
           careerStatus: isProfessional ? "Professional" : "Amateur",
           bio,
-          profilePictureUrl, 
-          videoClips: videoUrls
-        }, {
+          profilePictureUrl,
+          videoClips: videoUrls,
+        },
+        {
           headers: {
-            "Authorization": `${localStorage.getItem('token')}`
-          }
-      });
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       // Handle success - navigate to a new page or show a success message
       console.log(response.data)
