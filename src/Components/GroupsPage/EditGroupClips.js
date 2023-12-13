@@ -25,21 +25,27 @@ export function EditGroupClips({ displayedGroupId }) {
 
   useEffect(() => {
     const getClips = async () => {
+      try{
       const clips = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
         {
           headers: { Authorization: localStorage.getItem("token") },
         }
       );
-      setClipsList(clips.data);
-    };
+      console.log("ClipsList is", clipsList);
+      setClipsList(clips.data || []);
+    } catch (error) {
+      console.error("Error fetching clips:", error);
+      setClipsList([]); // Set to empty array in case of an error
+    }
+  }
     getClips();
-  }, [displayedGroupId, isBeingEdited]);
+  }, [displayedGroupId, isBeingEdited])
 
   const writeData = async (newClip) => {
     const fileRef = sRef(
       storage,
-      `videoclips/${displayedGroupId}/${Date.now()}`
+      `group-videoclips/${displayedGroupId}/${Date.now()}`
     );
     uploadBytes(fileRef, newClip)
       .then(() => getDownloadURL(fileRef))
@@ -49,7 +55,7 @@ export function EditGroupClips({ displayedGroupId }) {
           {
             hostUrl: url,
             groupId: displayedGroupId,
-            userId: userId
+            userId
           },
           {
             headers: { Authorization: localStorage.getItem("token") },
@@ -58,21 +64,25 @@ export function EditGroupClips({ displayedGroupId }) {
         return addedClip;
       })
       .then((addedClip) => {
-        console.log(addedClip);
-        setClipsList((prevState) => {
-          let newState = prevState;
-          newState.unshift(addedClip.data.newClip);
-          return newState;
-        });
-        setNewVideo(null);
-      });
-  };
+        if (addedClip.data && addedClip.data.newClip) {
+    setClipsList(prevState => [addedClip.data.newClip, ...prevState]);
+  } else {
+    // Handle the case where the new clip is not properly returned from the server
+    console.error("New clip was not added properly:", addedClip);
+  }
+  setNewVideo(null);
+})};
 
 const deleteClip = async (url, clipId, clipIndex) => {
+    if (!url) {
+      console.error("URL is undefined or null.");
+      return;
+    }
   const response = window.confirm(`Delete clip?`);
   if (response) {
+    console.log("The url is", url)
     const fileName = url.split("%2F")[2].split("?")[0];
-    const fileRef = sRef(storage, `videoclips/${displayedGroupId}/${fileName}`);
+    const fileRef = sRef(storage, `group-videoclips/${displayedGroupId}/${fileName}`);
     deleteObject(fileRef);
 
     axios
@@ -92,17 +102,17 @@ const deleteClip = async (url, clipId, clipIndex) => {
 
   const displayedClips = clipsList.map((clip, index) => {
     return (
-      <div className="relative m-2">
+      <div className="relative m-2" key={clip.id}>
         <VideoTile videoId={clip.id} videoUrl={clip.hostUrl} />
         {console.log(sRef(clip.hostUrl))}
-        {isBeingEdited ? (
+        {isBeingEdited && (
           <div
             onClick={() => deleteClip(clip.hostUrl, clip.id, index)}
             className="absolute -top-[8%] -right-[8%] z-[30] bg-white rounded-[50%] w-[1em] h-[1em] border flex justify-center items-center"
           >
             <XCircleIcon className="h-8 w-8 text-gray-500" />
           </div>
-        ) : null}
+        )}
       </div>
     );
   });
@@ -119,6 +129,11 @@ const deleteClip = async (url, clipId, clipIndex) => {
         <label for={`editButton-clips`}>
           <PencilSquareIcon className="h-6 w-6 text-gray-500 cursor-pointer" />
         </label>
+        <button
+          onClick={() => setIsBeingEdited(!isBeingEdited)}
+          id={`editButton-clips`}
+          style={{ display: "none" }}
+        />
       </section>
       <section
         className={`text-[1.5rem] font-semibold leading-[1.2em] flex flex-row ${
@@ -161,8 +176,8 @@ const deleteClip = async (url, clipId, clipIndex) => {
               </div>
             ) : (
               <label
-                for={`addClip`}
-                className="flex flex-row p-[0.5em]  items-center"
+                htmlFor={`addClip`}
+                className="flex flex-row p-[0.5em] items-center"
               >
                 <div className="flex flex-row px-[1em]">
                   <p className="pr-[0.25em] font-bold">Add Clip</p>
