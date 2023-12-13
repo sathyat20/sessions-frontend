@@ -1,23 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { EditGroupModal } from "../Components/GroupsPage/EditGroupModal";
 import { VideoTile } from "../Components/VideoTile";
+import axios from "axios";
+import {AddMemberModal} from "../Components/Buttons/AddMemberModal"
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
-  const { group } = location.state || {};
+  const [group, setGroup] = useState(location?.state?.group ? location.state.group : null)
+  const [userId, setUserId] = useState(null);
+  const {groupId} = useParams()
+  const [addMemberModalToggle, setAddMemberModalToggle] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false);
 
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
   };
 
+  useEffect(() => {
+    const getGroupData = async () => {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      setGroup(response.data)
+    }
+    const getCurrentUser = async () => {
+      let currentUserInfo = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      setUserId(currentUserInfo.data.user.id);
+    };
+
+    if (!group) {
+      getGroupData();
+    }
+
+    getCurrentUser();
+
+  }, [])
+
+  const removeAddMemberModal = () => {
+    setAddMemberModalToggle(false);
+  };
+
+  // Render group details
   // Render group details
   return (
     <div className="flex flex-col h-[100dvh] pb-[4em]">
       <div className="flex-grow overflow-y-auto">
-        {/* {console.log(group)} */}
+        {/* {console.log(location.state)} */}
         {group ? (
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
@@ -114,6 +151,20 @@ export const GroupDetailPage = ({ motion }) => {
           <p className="text-center">Loading group details...</p>
         )}
       </div>
+
+      {addMemberModalToggle && (
+          <AddMemberModal
+            members='to edit later'
+            userId={userId}
+            removeModal = { removeAddMemberModal }
+          />
+        )}
+        {addMemberModalToggle && (
+          <div
+            onClick={removeAddMemberModal}
+            className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
+          ></div>
+        )}
       {showEditModal && <EditGroupModal removeModal={toggleEditModal} />}
     </div>
   );

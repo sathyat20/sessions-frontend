@@ -23,42 +23,38 @@ export function EditClips({ displayedUserId }) {
       getClips();
     }, [displayedUserId, isBeingEdited]);
 
-    const writeData = async (newClip) => {    
+  const writeData = async (newClip) => {
     const fileRef = sRef(storage, `videoclips/${displayedUserId}/${Date.now()}`);
     uploadBytes(fileRef, newClip)
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
-        const addedClip = axios.post(`${process.env.REACT_APP_BACKEND_URL}/users/clips`, { 
+        const addedClip = axios.post(`${process.env.REACT_APP_BACKEND_URL}/users/clips`, {
           hostUrl: url,
         },
-        {
-          headers: { Authorization: localStorage.getItem("token") },
+          {
+            headers: { Authorization: localStorage.getItem("token") },
+          })
+        return addedClip;
       })
-      return addedClip;
-      })
-      .then((addedClip)=>{
+      .then((addedClip) => {
         console.log(addedClip)
-        setClipsList((prevState)=>{
-          let newState = prevState;
+        setClipsList((prevState) => {
+          let newState = [...prevState];
           newState.unshift(addedClip.data.newClip);
-          return newState
+          return newState 
         })
         setNewVideo(null);
       })
-      
-    }
-    
+
+  }
+
     const deleteClip = async (url, clipId, clipIndex) => {
       const response = window.confirm(`Delete clip?`)
         if (response) { 
           const fileName = url.split('%2F')[2].split('?')[0]
-          console.log(fileName)
           const fileRef = sRef(storage, `videoclips/${displayedUserId}/${fileName}`);
-          console.log(fileRef);
           deleteObject(fileRef);
-            axios.delete(`${process.env.REACT_APP_BACKEND_URL}/users/clips/${clipId}`, { 
-              profilePictureUrl: url,
-            },
+            axios.delete(`${process.env.REACT_APP_BACKEND_URL}/users/clips/${clipId}`, 
             {
               headers: { Authorization: localStorage.getItem("token") },
           });
@@ -71,9 +67,9 @@ export function EditClips({ displayedUserId }) {
     
     const displayedClips = clipsList.map((clip, index) => {     
       return (
-        <div className = 'relative m-2'>
+        <div className = 'relative m-2' key={clip.id}>
           <VideoTile videoId={clip.id} videoUrl={clip.hostUrl} />
-          {console.log(sRef(clip.hostUrl))}
+          {console.log(clip)}
           {isBeingEdited ?
             <div
               onClick={() => deleteClip(clip.hostUrl, clip.id, index)}
