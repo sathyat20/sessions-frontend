@@ -7,7 +7,7 @@ import {
   PencilSquareIcon,
 } from "@heroicons/react/20/solid";
 
-export function EditGroup({ groupInfo }) {
+export function EditGroup({ groupInfo, onEditSaved }) {
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [groupDetails, setGroupDetails] = useState({
     groupName: groupInfo?.groupName,
@@ -64,6 +64,7 @@ export function EditGroup({ groupInfo }) {
     console.log("EditedGroup", response.data.editedGroup)
     setGroupDetails(response.data.editedGroup);
     setIsBeingEdited(false);
+    onEditSaved()
   };
 
   const revertData = () => {

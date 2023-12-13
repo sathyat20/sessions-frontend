@@ -5,15 +5,16 @@ import { EditGroupClips } from "./EditGroupClips";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useLocation } from "react-router-dom";
 
-export const EditGroupModal = ({ groupId, removeModal }) => {
+export const EditGroupModal = ({ groupId, removeModal, onEditSaved }) => {
   const location = useLocation();
-  const { group } = location.state || {};
+  const [group, setGroup] = useState(location.state?.group || {});
   // const [groupInfo, setGroupInfo] = useState({
   //   groupName: null,
   //   profilePictureUrl: null,
   //   bio: null,
   //   members: [], 
   // });
+
 
   return (
     <>
@@ -32,10 +33,14 @@ export const EditGroupModal = ({ groupId, removeModal }) => {
                 <EditGroupPic
                   groupId={group.id}
                   storedURL={group.profilePictureUrl}
+                  onEditSaved={onEditSaved}
                 />
-                <EditGroup groupInfo={group} />
+                <EditGroup groupInfo={group} onEditSaved={onEditSaved} />
                 {console.log(group.id)}
-                <EditGroupClips displayedGroupId={group.id} />
+                <EditGroupClips
+                  displayedGroupId={group.id}
+                  onEditSaved={onEditSaved}
+                />
               </div>
             ) : null}
           </div>
