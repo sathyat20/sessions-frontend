@@ -11,21 +11,23 @@ import { VideoTile } from "../Components/VideoTile";
 import { GroupChatCreationModal } from "../Components/GroupsPage/GroupChatCreationModal";
 
 import axios from "axios";
-import {EditMemberModal} from "../Components/Buttons/EditMemberModal"
-import {EditMemberButton} from "../Components/Buttons/EditMemberButton"
-import {LeaveGroupButton} from "../Components/Buttons/LeaveGroupButton"
+import { EditMemberModal } from "../Components/Buttons/EditMemberModal";
+import { EditMemberButton } from "../Components/Buttons/EditMemberButton";
+import { LeaveGroupButton } from "../Components/Buttons/LeaveGroupButton";
 import { GroupsPage } from "./GroupsPage";
-
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
-  const [group, setGroup] = useState(location?.state?.group ? location.state.group : null)
+  const [group, setGroup] = useState(
+    location?.state?.group ? location.state.group : null
+  );
   const [userId, setUserId] = useState(null);
-  const {groupId} = useParams()
-  const [editMemberModalToggle, setEditMemberModalToggle] = useState(false)
+  const { groupId } = useParams();
+  const [editMemberModalToggle, setEditMemberModalToggle] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
-  const [editedInfoToggle, setEditedInfoToggle] = useState(false)
+  const [editedInfoToggle, setEditedInfoToggle] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
@@ -43,42 +45,77 @@ export const GroupDetailPage = ({ motion }) => {
     openChatModal();
   };
 
-  useEffect(() => {
-    const getGroupData = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-      setGroup(response.data)
-    }
-    const getCurrentUser = async () => {
-      let currentUserInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-      setUserId(currentUserInfo.data.user.id);
-    };
+  const checkIfAdmin = (userGroups, userId) => {
+    console.log("CHecking", userId);
+    console.log(userGroups);
+    return userGroups.some(
+      (userGroup) => userGroup.user.id === userId && userGroup.isAdmin
+    );
+  };
 
-    if (!group || editedInfoToggle) {
-      getGroupData();
-      setEditedInfoToggle(false);
+
+  const onEditSaved = async () => {
+    // fetch updated group data
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
+      {
+        headers: { Authorization: localStorage.getItem("token") },
+      }
+    );
+    setGroup(response.data);
+  };
+
+  useEffect(
+    () => {
+      const getGroupData = async () => {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
+          {
+            headers: { Authorization: localStorage.getItem("token") },
+          }
+        );
+        console.log(response.data);
+        setGroup(response.data);
+        setEditedInfoToggle(false);
+      };
+
+      const getCurrentUser = async () => {
+        let currentUserInfo = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
+          {
+            headers: { Authorization: localStorage.getItem("token") },
+          }
+        );
+        setUserId(currentUserInfo.data.user.id);
+        console.log("userId is", userId);
+      };
+
+      if (!group || editedInfoToggle) {
+        getGroupData();
+        setEditedInfoToggle(false);
+      }
+      getCurrentUser();
+    },
+    groupId,
+    [editedInfoToggle]
+  );
+
+  useEffect(() => {
+    if (group && userId) {
+      const adminStatus = checkIfAdmin(group.userGroups, userId);
+      setIsAdmin(adminStatus);
     }
-    getCurrentUser();
-  }, [editedInfoToggle])
+  }, [group, userId]);
 
   const removeEditMemberModal = () => {
     setEditMemberModalToggle(false);
   };
 
-
   // Render group details
   return (
     <div className="flex flex-row h-[100dvh]">
       <div className="flex-grow overflow-y-auto">
-        {console.log(editMemberModalToggle)}
+        {/* {console.log(editMemberModalToggle)} */}
         {group ? (
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
@@ -169,24 +206,27 @@ export const GroupDetailPage = ({ motion }) => {
         {/* Add your buttons and elements here */}
         {/* Example button */}
         <button className="edit-button-styles">
-
-          <EditMemberButton
-            groupId={group.id}
-            editMemberModalToggle={editMemberModalToggle}
-            setEditMemberModalToggle={setEditMemberModalToggle}
-            members={group.userGroups}
-            userId={userId}
-          />
-
+          {group ? (
+            <EditMemberButton
+              groupId={group.id}
+              editMemberModalToggle={editMemberModalToggle}
+              setEditMemberModalToggle={setEditMemberModalToggle}
+              members={group.userGroups}
+              userId={userId}
+            />
+          ) : null}
         </button>
-        {
-        <button onClick={toggleEditModal} className="edit-button-styles">
-          <PencilSquareIcon className="h-6 w-6 text-white" />
-        </button>}
+
+        {isAdmin && (
+          <button onClick={toggleEditModal} className="edit-button-styles">
+            <PencilSquareIcon className="h-6 w-6 text-white" />
+          </button>
+        )}
+
         <button onClick={handleCreateChat} className="edit-button-styles">
           <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white cursor-pointer" />
         </button>
-        <LeaveGroupButton userId={userId} groupId={group.id} />
+        {group ? <LeaveGroupButton userId={userId} groupId={group.id} /> : null}
       </div>
 
       {editMemberModalToggle && (
@@ -204,7 +244,12 @@ export const GroupDetailPage = ({ motion }) => {
           className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
         ></div>
       )}
-      {showEditModal && <EditGroupModal removeModal={toggleEditModal} />}
+      {showEditModal && (
+        <EditGroupModal
+          removeModal={toggleEditModal}
+          onEditSaved={onEditSaved}
+        />
+      )}
       {showChatModal && (
         <GroupChatCreationModal
           groupId={group.id}
@@ -215,4 +260,3 @@ export const GroupDetailPage = ({ motion }) => {
     </div>
   );
 };
-

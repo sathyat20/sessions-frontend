@@ -17,7 +17,7 @@ import {
 } from "firebase/storage";
 import { UserContext } from "../../App.js";
 
-export function EditGroupClips({ displayedGroupId }) {
+export function EditGroupClips({ displayedGroupId, onEditSaved }) {
   const [clipsList, setClipsList] = useState([]);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [newVideo, setNewVideo] = useState(null);
@@ -47,34 +47,46 @@ export function EditGroupClips({ displayedGroupId }) {
     const fileRef = sRef(
       storage,
       `group-videoclips/${displayedGroupId}/${Date.now()}`
-
     );
-    uploadBytes(fileRef, newClip)
-      .then(() => getDownloadURL(fileRef))
-      .then((url) => {
-        const addedClip = axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
-          {
-            hostUrl: url,
-            groupId: displayedGroupId,
-            userId
-          },
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        );
-        return addedClip;
-      })
-      .then((addedClip) => {
+    try {
+      await uploadBytes(fileRef, newClip);
+      const url = await getDownloadURL(fileRef);
+      const addedClip = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
+        {
+          hostUrl: url,
+          groupId: displayedGroupId,
+          userId,
+        },
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
 
-        if (addedClip.data && addedClip.data.newClip) {
-    setClipsList(prevState => [addedClip.data.newClip, ...prevState]);
-  } else {
-    // Handle the case where the new clip is not properly returned from the server
-    console.error("New clip was not added properly:", addedClip);
-  }
-  setNewVideo(null);
-})};
+      // Assuming addedClip.data is the new clip object
+      if (addedClip.data) {
+        setClipsList((prevState) => [addedClip.data, ...prevState]);
+        setNewVideo(null)
+        onEditSaved()
+      } else {
+        console.error("New clip was not added properly:", addedClip);
+      }
+    } catch (error) {
+      console.error("Error in adding new clip:", error);
+    }
+    setNewVideo(null);
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewVideo({
+        file: file,
+        preview: URL.createObjectURL(file), // Create a preview URL
+      });
+    }
+  };
+
 
 const deleteClip = async (url, clipId, clipIndex) => {
     if (!url) {
@@ -98,6 +110,7 @@ const deleteClip = async (url, clipId, clipIndex) => {
           updatedClips.splice(clipIndex, 1);
           return updatedClips;
         });
+        onEditSaved();
       })
       .catch((err) => console.error("Error deleting clip:", err));
   }
@@ -197,9 +210,7 @@ const deleteClip = async (url, clipId, clipIndex) => {
             id="addClip"
             accept="video/*"
             style={{ display: "none" }}
-            onChange={(e) => {
-              setNewVideo(e.target.files[0]);
-            }}
+            onChange={handleFileSelect}
           />
         </section>
       ) : null}

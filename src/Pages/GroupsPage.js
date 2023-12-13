@@ -22,7 +22,7 @@ export const GroupsPage = ({ motion }) => {
        }
       try {
         const response = await axios.get(
-          `http://localhost:8080/groups/${userId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/groups/${userId}`,
           {
             headers: { Authorization: localStorage.getItem("token") },
           }
