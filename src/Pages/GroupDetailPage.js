@@ -4,15 +4,19 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { EditGroupModal } from "../Components/GroupsPage/EditGroupModal";
 import { VideoTile } from "../Components/VideoTile";
 import axios from "axios";
-import {AddMemberModal} from "../Components/Buttons/AddMemberModal"
+import {EditMemberModal} from "../Components/Buttons/EditMemberModal"
+import {EditMemberButton} from "../Components/Buttons/EditMemberButton"
+import {LeaveGroupButton} from "../Components/Buttons/LeaveGroupButton"
+import { GroupsPage } from "./GroupsPage";
 
 export const GroupDetailPage = ({ motion }) => {
   const location = useLocation();
   const [group, setGroup] = useState(location?.state?.group ? location.state.group : null)
   const [userId, setUserId] = useState(null);
   const {groupId} = useParams()
-  const [addMemberModalToggle, setAddMemberModalToggle] = useState(false)
+  const [editMemberModalToggle, setEditMemberModalToggle] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false);
+  const [editedInfoToggle, setEditedInfoToggle] = useState(false)
 
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
@@ -37,24 +41,23 @@ export const GroupDetailPage = ({ motion }) => {
       setUserId(currentUserInfo.data.user.id);
     };
 
-    if (!group) {
+    if (!group || editedInfoToggle) {
       getGroupData();
+      setEditedInfoToggle(false);
     }
-
     getCurrentUser();
+  }, [editedInfoToggle])
 
-  }, [])
-
-  const removeAddMemberModal = () => {
-    setAddMemberModalToggle(false);
+  const removeEditMemberModal = () => {
+    setEditMemberModalToggle(false);
   };
 
-  // Render group details
   // Render group details
   return (
     <div className="flex flex-col h-[100dvh] pb-[4em]">
       <div className="flex-grow overflow-y-auto">
-        {/* {console.log(location.state)} */}
+      
+        {console.log(editMemberModalToggle)}
         {group ? (
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
@@ -63,6 +66,14 @@ export const GroupDetailPage = ({ motion }) => {
                 <PencilSquareIcon className="icon-styles" />
                 Edit Group
               </button>
+              <EditMemberButton 
+      groupId={group.id}
+      editMemberModalToggle={editMemberModalToggle}
+      setEditMemberModalToggle={setEditMemberModalToggle}
+      members={group.userGroups}
+      userId = {userId}
+      />
+      <LeaveGroupButton userId = {userId} groupId = {group.id} />
               <div className="mb-8">
                 {group.profilePictureUrl && (
                   <img
@@ -152,16 +163,18 @@ export const GroupDetailPage = ({ motion }) => {
         )}
       </div>
 
-      {addMemberModalToggle && (
-          <AddMemberModal
-            members='to edit later'
+      {editMemberModalToggle && (
+          <EditMemberModal
+            members={group.userGroups}
+            groupId ={group.id}
             userId={userId}
-            removeModal = { removeAddMemberModal }
+            removeModal = { removeEditMemberModal }
+            setEditedInfoToggle = {setEditedInfoToggle}
           />
         )}
-        {addMemberModalToggle && (
+        {editMemberModalToggle && (
           <div
-            onClick={removeAddMemberModal}
+            onClick={removeEditMemberModal}
             className="fixed top-0 left-0 w-[100vw] h-full bg-black z-[9] transition-all opacity-50"
           ></div>
         )}
