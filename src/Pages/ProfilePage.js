@@ -89,6 +89,8 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
 
   return (
     <>
+    {console.log(isOwnPage)}
+    {console.log(userId)}
       <div className="flex flex-row justify-center h-[93dvh] pt-[2em] pb-[4em] px-[2em] w-full overflow-y-auto">
         {/* <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-visible overflow-y-auto"> */}
         <div className="flex flex-col pt-[2em] mb-[-10em] w-full">
