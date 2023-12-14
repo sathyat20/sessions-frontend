@@ -55,6 +55,7 @@ export const GroupChatCreationModal = ({ groupId, groupName, onClose }) => {
     };
 
   const createChat = async () => {
+    console.log('foo')
     // collect the IDs of the selected members 
     const memberIds = selectedMembers.map((member) => member.id);
 

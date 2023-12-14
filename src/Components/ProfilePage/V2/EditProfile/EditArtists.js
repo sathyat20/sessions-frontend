@@ -73,10 +73,10 @@ export function EditArtists({ displayedUserId }) {
 
   const artistText = artistsList.map((artist, index) => {
     return (
-      <div className="" key={index} id={artist}>
+      <div className="flex flex-row" key={index} id={artist}>
         {artist.toUpperCase() + " "}
         {isBeingEdited ? (
-          <div>
+          <div className = 'flex flex-row'>
             <label for={`deleteArtist-${index}`}>
               <TrashIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
             </label>
