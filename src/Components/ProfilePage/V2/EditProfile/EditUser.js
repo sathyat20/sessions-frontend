@@ -29,7 +29,7 @@ const careerStatusList = [
 
   const handleSelectChange = (e) => {
     setUserInfo((prevState) => {
-      return { ...prevState, careerStatus: e.label};
+      return { ...prevState, careerStatus: e.value};
     });
   };
 

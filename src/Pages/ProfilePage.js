@@ -41,6 +41,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
           headers: { Authorization: localStorage.getItem("token") },
         }
       );
+      console.log(pulledPageOwnerInfo)
       setPageOwnerInfo({ ...pulledPageOwnerInfo.data.user });
       setUserId(pulledPageOwnerInfo.data.ownId);
       setIsOwnPage(
@@ -91,6 +92,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
     <>
     {console.log(isOwnPage)}
     {console.log(userId)}
+    {console.log(pageOwnerUserId)}
       <div className="flex flex-row justify-center h-[93dvh] pt-[2em] pb-[4em] px-[2em] w-full overflow-y-auto">
         {/* <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-visible overflow-y-auto"> */}
         <div className="flex flex-col pt-[2em] mb-[-10em] w-full">
