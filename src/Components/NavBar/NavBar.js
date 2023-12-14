@@ -7,6 +7,7 @@ import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { MusicalNoteIcon } from "@heroicons/react/24/solid";
+import { UserGroupIcon } from "@heroicons/react/24/solid";
 
 // Import specific styling
 import "./NavBar.css";
@@ -38,14 +39,17 @@ export const NavBar = () => {
     <>
       {navToggle && (
         <nav>
-          <NavLink to="userprofile">
-            <UserIcon className="h-6 w-6 nav" />
-          </NavLink>
-          <NavLink to="search">
+          <NavLink to="search/type">
             <MusicalNoteIcon className="h-6 w-6 scale-[130%] origin-center nav rounded-[50%]" />
           </NavLink>
           <NavLink to="jamchatroom">
             <ChatBubbleLeftRightIcon className="h-6 w-6 nav" />
+          </NavLink>
+          <NavLink to="userprofile">
+            <UserIcon className="h-6 w-6 nav" />
+          </NavLink>
+          <NavLink to="groups">
+            <UserGroupIcon className="h-6 w-6 nav" />
           </NavLink>
         </nav>
       )}

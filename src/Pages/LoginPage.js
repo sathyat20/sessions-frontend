@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../App.js";
 
 // Import Icons
 import { BackwardIcon } from "@heroicons/react/24/solid";
@@ -8,6 +9,7 @@ import { BackwardIcon } from "@heroicons/react/24/solid";
 export const LoginPage = ({ motion }) => {
   const [user, setUser] = useState({ username: "", password: "" });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const context = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -72,8 +74,13 @@ export const LoginPage = ({ motion }) => {
     if (checkUser.data.success === true) {
       setIsAuthenticated(true);
       console.log("Bearer " + checkUser.data.data);
+      console.log(checkUser)
+      context.setUserId(checkUser.data.id)
+      context.setUserName(user.username)
+      // localStorage.setItem('userId', checkUser.data.id)
+      // localStorage.setItem('userName', user.username)
       localStorage.setItem("token", "Bearer " + checkUser.data.data);
-      navigate("/search");
+      navigate("/search/type");
     } else {
       alert("Sign in unsuccessful. " + checkUser.data.msg);
     }

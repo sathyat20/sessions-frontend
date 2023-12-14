@@ -1,5 +1,3 @@
-//NOT IN USE
-
 import React, { useEffect, useState } from "react";
 import {
   CheckCircleIcon,
@@ -11,13 +9,14 @@ import {
 import axios from "axios";
 import Select from "react-select";
 
-export function InstrumentTable({ isOwnPage, displayedUserId }) {
+export function EditInstruments({ displayedUserId }) {
   const [userInstrumentsList, setUserInstrumentsList] = useState([]);
   const [fullInstrumentsList, setFullInstrumentsList] = useState([]);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [newInstrument, setNewInstrument] = useState({
     instrument: { value: "", label: "" },
-    instrumentExperience: "",
+    highestQualification: { value: "", label: "" },
+    qualificationInstitution: "",
   });
 
   useEffect(() => {
@@ -42,6 +41,16 @@ export function InstrumentTable({ isOwnPage, displayedUserId }) {
     getUserInstrumentsInfo();
     getFullInstrumentsList();
   }, []);
+
+  const fullQualificationsList = [
+    {value:'Self Taught', label:'Self Taught'},
+    {value:'Low Grade(eg ABRSM 1-5)', label:'Low Grade(eg ABRSM 1-5)'},
+    {value:'High Grade(eg ABRSM 6-8)', label:'High Grade(eg ABRSM 6-8)'},
+    {value:'Diploma', label:'Diploma'},
+    {value:"Bachelor's degree", label: "Bachelor's degree"},
+    {value:"Master's degree", label: "Master's degree"},
+    {value:"Doctorate", label: "Doctorate"},
+  ]
 
   const writeData = async () => {
     setIsBeingEdited(false);
@@ -78,25 +87,19 @@ export function InstrumentTable({ isOwnPage, displayedUserId }) {
     } else {
       setUserInstrumentsList((prevState) => {
         prevState.push(newInstrument);
-        console.log(prevState);
-        prevState.sort(
-          (a, b) => b.instrumentExperience - a.instrumentExperience
-        );
-        console.log(prevState);
         return [...prevState];
       });
       setNewInstrument({
         instrument: { value: "", label: "" },
-        instrumentExperience: "",
+        highestQualification: { value: "", label: "" },
+        qualificationInstitution: "",
       });
     }
   };
 
   const removeRow = (index) => {
-    console.log(index);
     setUserInstrumentsList((prevState) => {
       prevState.splice(index, 1);
-      console.log(prevState);
       return [...prevState];
     });
   };
@@ -109,62 +112,76 @@ export function InstrumentTable({ isOwnPage, displayedUserId }) {
     });
   };
 
-  const handleSelectChange = (e) => {
+  const handleInstrumentChange = (e) => {
     setNewInstrument((prevState) => {
       return { ...prevState, instrument: e };
     });
   };
 
+  const handleQualificationChange = (e) => {
+    console.log(e)
+    setNewInstrument((prevState) => {
+      return { ...prevState, highestQualification: e };
+    });
+  };
+
   const instrumentRows = userInstrumentsList.map((entry, index) => {
     return (
-      <tr key={index} id={entry.instrument.label}>
-        <td className="inline pr-[.5em]">
-          {entry.instrument.label.toUpperCase()}
-        </td>
-        <td>{entry.instrumentExperience}</td>
-        <td>
-          {isBeingEdited ? (
-            <div>
-              <label for={`deleteRow-instruments-${index}`}>
-                <TrashIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
-              </label>
-              <button
-                onClick={() => removeRow(index)}
-                id={`deleteRow-instruments-${index}`}
-                style={{ display: "none" }}
-              />
+        <div className='flex flex-row m-2'>
+            <div className = 'text-sm w-5/6'>
+                <div className = 'text-lg'>{entry.instrument.label.toUpperCase()} </div>
+                {entry.highestQualification.label}
+                {entry.qualificationInstitution ? ' from ' + entry.qualificationInstitution : null}
             </div>
-          ) : null}
-        </td>
-      </tr>
+            {isBeingEdited ? (
+                <div className = 'flex justify-center items-center w-1/6'>
+                    <label for={`deleteRow-instruments-${index}`}>
+                        <TrashIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
+                    </label>
+                    <button
+                        onClick={() => removeRow(index)}
+                        id={`deleteRow-instruments-${index}`}
+                        style={{ display: "none" }}
+                    />
+                </div>
+            ) : null}
+        </div>
     );
   });
 
   const newEntryRow = (
-    <tr key="newEntry" id="newEntry">
-      <td className="inline pr-[.5em] text-lg">
+    <div className = 'flex flex-col'>
         <Select // we need to figure out how to style this...
+        className = 'my-[0.5em]'
           defaultValue={{ value: "Instrument", label: "Instrument" }}
           size="10"
           options={fullInstrumentsList}
           value={newInstrument.instrument}
-          onChange={(e) => handleSelectChange(e)}
+          onChange={(e) => handleInstrumentChange(e)}
         />
-      </td>
-      <td className="text-lg">
-        <input
-          placeholder="Experience(y)"
-          type="text"
-          name="experience(y)"
-          id="instrumentExperience"
+      
+      <Select 
+      className = 'my-[0.5em]'
+          defaultValue={{ value: "Qualification", label: "Qualification" }}
           size="10"
-          value={newInstrument.instrumentExperience}
+          options={fullQualificationsList}
+          value={newInstrument.highestQualification}//need to rework this into the react select format
+          onChange={(e) => handleQualificationChange(e)}
+        />
+        <input
+        className = 'border border-black my-[0.5em]'
+          placeholder="Institution"
+          type="text"
+          name="institution"
+          id="qualificationInstitution"
+          size="10"
+          value={newInstrument.qualificationInstitution}
           onChange={(e) => {
             inputChange(e);
           }}
         />
-      </td>
-      <td>
+        <div className = 'flex flex-row items-center my-[0.5em]'>
+        <p className = 'text-xl font-normal'>Add Instrument</p>
         <label for={`addRow-instruments`}>
           <PlusCircleIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
         </label>
@@ -173,15 +190,16 @@ export function InstrumentTable({ isOwnPage, displayedUserId }) {
           id={`addRow-instruments`}
           style={{ display: "none" }}
         />
-      </td>
-    </tr>
+        </div>
+    </div>
   );
 
   return (
     <div>
+    <hr />
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
-          INSTRUMENTS/EXPERIENCE
+          INSTRUMENTS
         </h1>
         {isBeingEdited ? (
           <div className="flex flex-row">
@@ -208,7 +226,7 @@ export function InstrumentTable({ isOwnPage, displayedUserId }) {
           </div>
         ) : null}
         <label for={`editButton-instruments`}>
-          {isOwnPage && !isBeingEdited ? (
+          { !isBeingEdited ? (
             <PencilSquareIcon className="h-6 w-6 text-gray-500 cursor-pointer" />
           ) : null}
         </label>
@@ -218,13 +236,9 @@ export function InstrumentTable({ isOwnPage, displayedUserId }) {
           style={{ display: "none" }}
         />
       </div>
-      <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em]">
-        <table>
-          <tbody>
+      <div className="text-[1.5rem] font-semibold leading-[1.2em] pr-[1em]">  
             {instrumentRows}
-            {isBeingEdited ? newEntryRow : null}
-          </tbody>
-        </table>
+            {isBeingEdited ? newEntryRow : null}      
       </div>
     </div>
   );

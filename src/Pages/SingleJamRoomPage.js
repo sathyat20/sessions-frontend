@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // Import Components
@@ -35,6 +37,7 @@ export const SingleJamRoomPage = () => {
   const [attachmentModalToggle, setAttachmentModalToggle] = useState(false);
   const [addUserModalToggle, setAddUserModalToggle] = useState(false);
   const [usersInRoomModalToggle, setUsersInRoomModalToggle] = useState(false);
+  const navigate = useNavigate();
 
   let { chatroomId } = useParams();
 
@@ -81,9 +84,9 @@ export const SingleJamRoomPage = () => {
     socket.emit("join-room", chatroomId);
     if (tokenAuth && isAuthenticated) {
       console.log("STEP 2");
-      getChatroomDetails();
-      getChatroomInfo();
       getChatroomUsers();
+      getChatroomDetails();   
+      getChatroomInfo();   
       getChatroomAttachments();
     }
   }, [isAuthenticated, tokenAuth]);
@@ -162,7 +165,6 @@ export const SingleJamRoomPage = () => {
         headers: { Authorization: localStorage.getItem("token") },
       }
     );
-
     if (chatroomDetails.data.success === true) {
       setRoomDetails(chatroomDetails.data.data);
     } else {
@@ -177,7 +179,10 @@ export const SingleJamRoomPage = () => {
         headers: { Authorization: localStorage.getItem("token") },
       }
     );
-
+    const usersInRoom = allUsers.data.data.map((user)=>user.id)
+    if (!(usersInRoom.includes(userId))) {
+      navigate("/jamchatroom")
+    }
     if (allUsers.data.success === true) {
       setRoomUsers(allUsers.data.data);
     } else {
@@ -290,6 +295,9 @@ export const SingleJamRoomPage = () => {
       <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em] ">
         <div className="flex flex-col w-full gap-0 lg:w-[30%] justify-between overflow-x-hidden overflow-y-auto">
           <div className="flex flex-col pt-[0em] mb-[0em] h-[100%]">
+          <button onClick={() => navigate(-1)}>
+                  <ArrowLeftIcon class="h-6 w-6 text-gray-500" />
+                </button>
             <h1
               className="font-bold text-txtcolor-primary text-[1.5rem] text-center balance scale-100 transition-all hover:cursor-pointer active:scale-95 origin-center"
               onClick={handleUsersInRoomModal}
