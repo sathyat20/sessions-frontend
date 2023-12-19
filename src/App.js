@@ -48,14 +48,18 @@ function App() {
     if (TOKEN) {
       const getCurrentUser = async () => {
         console.log('getting')
-        let currentUserInfo = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-          {
-            headers: { Authorization: TOKEN },
-          }
-        );
-        setUserName(currentUserInfo.data.user.fullName);
-        setUserId(currentUserInfo.data.user.id);
+        try {
+          let currentUserInfo = await axios.get(
+            `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
+            {
+              headers: { Authorization: TOKEN },
+            }
+          );
+          setUserName(currentUserInfo.data.user.fullName);
+          setUserId(currentUserInfo.data.user.id);
+        } catch (err) {
+          console.log('token expired, proceed to sign up/sign in')
+        }
       };
       getCurrentUser();
     } 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +38,8 @@ export const SingleJamRoomPage = () => {
   const [addUserModalToggle, setAddUserModalToggle] = useState(false);
   const [usersInRoomModalToggle, setUsersInRoomModalToggle] = useState(false);
   const navigate = useNavigate();
+  const chatBottom = useRef(null)
+  const lastMessage = useRef(null)
 
   let { chatroomId } = useParams();
 
@@ -88,6 +90,7 @@ export const SingleJamRoomPage = () => {
       getChatroomDetails();   
       getChatroomInfo();   
       getChatroomAttachments();
+      chatBottom?.current?.lastElementChild?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
     }
   }, [isAuthenticated, tokenAuth]);
 
@@ -102,13 +105,21 @@ export const SingleJamRoomPage = () => {
     };
   }, []);
 
+  useEffect(()=>{
+    chatBottom?.current?.lastElementChild?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+  },[roomData])
+
+  // useEffect(()=>{
+  //   lastMessage?.current?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+  // },[lastMessage])
+
   useEffect(() => {
     socket.on("receive-message", (receiveddata) => {
       console.log("received-message from server: ", receiveddata);
       setRoomData((prevState) => {
         return [...prevState, receiveddata];
       });
-      console.log("received message");
+      console.log("received message"); 
     });
 
     socket.on("user-typing-response", (typinguser) => {
@@ -231,6 +242,8 @@ export const SingleJamRoomPage = () => {
       setRoomData((prevState) => {
         return [...prevState, newMessage.data.data];
       });
+      setUserMessage({message:''})
+      //chatBottom?.current?.lastElementChild?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
 
       // console.log(`Sending message to backend: ${userMessage}`);
       // Need to send the entire Request Response rather than the state.
@@ -295,46 +308,32 @@ export const SingleJamRoomPage = () => {
       <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em] ">
         <div className="flex flex-col w-full gap-0 lg:w-[30%] justify-between overflow-x-hidden overflow-y-auto">
           <div className="flex flex-col pt-[0em] mb-[0em] h-[100%]">
-          <button onClick={() => navigate(-1)}>
-                  <ArrowLeftIcon class="h-6 w-6 text-gray-500" />
-                </button>
-            <h1
-              className="font-bold text-txtcolor-primary text-[1.5rem] text-center balance scale-100 transition-all hover:cursor-pointer active:scale-95 origin-center"
-              onClick={handleUsersInRoomModal}
-            >
+            <section className='h-[15%]'>
+              <button onClick={() => navigate(-1)}>
+                <ArrowLeftIcon class="h-6 w-6 text-gray-500" />
+              </button>
+              <h1
+                className="font-bold text-txtcolor-primary text-[1.5rem] text-center balance scale-100 transition-all hover:cursor-pointer active:scale-95 origin-center"
+                onClick={handleUsersInRoomModal}
+              >
 
-               {roomDetails && roomDetails.name}
+                {roomDetails && roomDetails.name}
 
-            </h1>
-           
+              </h1>
 
-            <div className="flex flex-row justify-center h-[10%] text-sm text-slate-800 text-center pt-1 pb-[1em] mb-0">
-              <div className="flex flex-row justify-end b w-[90%] ">
-                <UserPlusIcon
-                  className="h-8 w-8 text-gray-500 origin-center scale-100 transition-all hover:scale-110 active:scale-95 "
-                  onClick={handleAddUserToRoomModal}
-                />
+
+              <div className="flex flex-row justify-center h-[10%] text-sm text-slate-800 text-center pt-1 pb-[1em] mb-0">
+                <div className="flex flex-row justify-end b w-[90%] ">
+                  <UserPlusIcon
+                    className="h-8 w-8 text-gray-500 origin-center scale-100 transition-all hover:scale-110 active:scale-95 "
+                    onClick={handleAddUserToRoomModal}
+                  />
+                </div>
               </div>
-            </div>
-
-            {/* <button
-              onClick={() => {
-                console.log(`roomData: `, JSON.stringify(roomData));
-                console.log(`roomDetails: `, JSON.stringify(roomDetails));
-                console.log(`roomUsers: `, JSON.stringify(roomUsers));
-                console.log(
-                  `roomAttachments: `,
-                  JSON.stringify(roomAttachments)
-                );
-              }}
-              className="bg-red-500 px-2 py-1"
-            >
-              View room data state
-            </button>
-            <br /> */}
+            </section>
 
             {/* Sorting message left and right by user logged in */}
-            <div className="pr-[1.5em] h-[100%] mb-[1em] py-[1em] border-b-[1px] border-t-[1px] border-slate-300 overflow-y-auto">
+            <div ref={chatBottom} className="pr-[1.5em] h-[65%]  border-b-[1px] border-t-[1px] border-slate-300 overflow-y-auto">
               {roomData &&
                 roomUsers &&
                 roomData.map((elementdata, index) => {
@@ -375,11 +374,12 @@ export const SingleJamRoomPage = () => {
                 })}
             </div>
 
-            <div className="flex flex-col justify-end w-[100%] min-h-[1rem] text-center leading-0">
-              {isTyping ? `User ${currentTypingUser} is typing...` : null}
-            </div>
 
-            <div className="flex flex-col justify-end h-[20%] gap-[1em] mt-[1em] lg:mt-[.5em] pr-[1.5em] text-right">
+
+            <div className="flex flex-col justify-end h-[20%] gap-[0.5em] lg:mt-[.5em] text-right">
+              <div className="flex flex-col justify-end w-[100%] h-[1.5em] min-h-[1rem] text-center leading-0 ">
+                {isTyping ? `User ${currentTypingUser} is typing...` : null}
+              </div>
               <div>
                 <textarea
                   type="text"
