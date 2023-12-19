@@ -226,6 +226,13 @@ export const SingleJamRoomPage = () => {
     }
   };
 
+  const onEnterPress = (e) => {
+    if(e.keyCode == 13 && e.shiftKey == false) {
+      e.preventDefault();
+      postNewMessage();
+    }
+  }
+
   const postNewMessage = async () => {
     if (userMessage) {
       let newMessage = await axios.post(
@@ -380,9 +387,12 @@ export const SingleJamRoomPage = () => {
               <div className="flex flex-col justify-end w-[100%] h-[1.5em] min-h-[1rem] text-center leading-0 ">
                 {isTyping ? `User ${currentTypingUser} is typing...` : null}
               </div>
-              <div>
+              <form>
+              <div className = 'h-[5em]'>
                 <textarea
+                  onKeyDown={onEnterPress}
                   type="text"
+                  height="2"
                   name="message"
                   onChange={handleTextChange}
                   value={userMessage.message}
@@ -399,13 +409,16 @@ export const SingleJamRoomPage = () => {
                   UPLOAD
                 </button>
 
-                <button
+                <input
+                type = "submit"
+                value = "SEND"
                   onClick={handleSubmitMessage}
                   className="bg-fill-secondary px-[1em] py-[.2em] text-white font-semibold rounded-md active:outline-none scale-100 transition-all active:scale-95"
-                >
-                  SEND
-                </button>
+                />
+                  {/* SEND
+                </button>                */}
               </div>
+              </form>
             </div>
           </div>
         </div>
