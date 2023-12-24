@@ -6,7 +6,7 @@ import { EditUser } from "./EditProfile/EditUser";
 import { EditPic } from "./EditProfile/EditPic";
 import { EditClips } from "./EditProfile/EditClips";
 // import { SessionClips } from "../Components/ProfilePage/V2/SessionClips"
-import axios from "axios";
+import apiRequest from "../../../api";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export const EditProfileModal = ({ removeModal }) => {
@@ -26,11 +26,8 @@ export const EditProfileModal = ({ removeModal }) => {
 
   useEffect(() => {
     const getCurrentUser = async () => {
-      let currentUserInfo = await axios.get(
+      let currentUserInfo = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       setIsAuthenticated(true);
       setUserId(currentUserInfo.data.user.id);

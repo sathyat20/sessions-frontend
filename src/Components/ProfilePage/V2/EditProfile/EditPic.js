@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import apiRequest from "../../../../api";
 import { storage } from "../../../../firebase/firebase.js";
 import { ref as sRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
@@ -19,12 +19,9 @@ export function EditPic({ displayedUserId, storedURL }) {
     uploadBytes(fileRef, profilePicture)
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
-        axios.put(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}`, {
+        apiRequest.put(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}`, {
           profilePictureUrl: url,
-        },
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-      });
+        });
       });
   };
 

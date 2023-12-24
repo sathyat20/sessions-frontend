@@ -6,7 +6,7 @@ import {
   TrashIcon,
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../../../api";
 
 export function EditArtists({ displayedUserId }) {
   const [artistsList, setArtistsList] = useState([]);
@@ -15,11 +15,8 @@ export function EditArtists({ displayedUserId }) {
 
   useEffect(() => {
     const getArtistInfo = async () => {
-      const artistInfo = await axios.get(
+      const artistInfo = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       setArtistsList(
         artistInfo.data.artistInterests.map((artist) => artist.name)
@@ -30,21 +27,15 @@ export function EditArtists({ displayedUserId }) {
 
   const writeData = async () => {
     setIsBeingEdited(false);
-    await axios.put(
+    await apiRequest.put(
       `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
       { artistsList },
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
     );
   };
 
   const revertData = async () => {
-    const artistInfo = await axios.get(
+    const artistInfo = await apiRequest.get(
       `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
     );
     setIsBeingEdited(false);
     setArtistsList(

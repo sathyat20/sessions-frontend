@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../api";
 
 // Import Components
 import { SpeechBubble } from "../Components/SpeechBubble/SpeechBubble";
@@ -61,11 +61,8 @@ export const SingleJamRoomPage = () => {
     if (tokenAuth) {
       console.log("getting current user");
       const getCurrentUser = async () => {
-        let currentUserInfo = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-          {
-            headers: { Authorization: tokenAuth },
-          }
+        let currentUserInfo = await apiRequest.get(
+          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`
         );
         setCurrentUser(currentUserInfo.data.user);
         setUserId(currentUserInfo.data.user.id);
@@ -151,11 +148,8 @@ export const SingleJamRoomPage = () => {
     //   if (tokenAuth) {
     //     console.log("token auth inside: ", tokenAuth);
     //     let updatedToken = localStorage.getItem("token");
-    let chatroomInfo = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomMessages`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
+    let chatroomInfo = await apiRequest.get(
+      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomMessages`
     );
 
     if (chatroomInfo.data.success === true) {
@@ -170,11 +164,8 @@ export const SingleJamRoomPage = () => {
   const getChatroomDetails = async () => {
     console.log("");
     console.log("chatroomId is: ", chatroomId);
-    let chatroomDetails = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getChatroomDetails`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
+    let chatroomDetails = await apiRequest.get(
+      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getChatroomDetails`
     );
     if (chatroomDetails.data.success === true) {
       setRoomDetails(chatroomDetails.data.data);
@@ -184,11 +175,8 @@ export const SingleJamRoomPage = () => {
   };
 
   const getChatroomUsers = async () => {
-    let allUsers = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomUsers`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
+    let allUsers = await apiRequest.get(
+      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomUsers`
     );
     const usersInRoom = allUsers.data.data.map((user)=>user.id)
     if (!(usersInRoom.includes(userId))) {
@@ -205,12 +193,8 @@ export const SingleJamRoomPage = () => {
     console.log("running get chatroom attachments");
     console.log("auth token in attachments: ", authToken);
     if (authToken) {
-      let allAttachments = await axios
-        .get(
-          `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomAttachments`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
+      let allAttachments = await apiRequest.get(
+          `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomAttachments`
         )
         .then((allAttachments) => {
           if (allAttachments.data.success === true) {
@@ -235,14 +219,13 @@ export const SingleJamRoomPage = () => {
 
   const postNewMessage = async () => {
     if (userMessage) {
-      let newMessage = await axios.post(
+      let newMessage = await apiRequest.post(
         `${process.env.REACT_APP_BACKEND_URL}/users/postNewMessage`,
         {
           userId: userId,
           chatroomId: chatroomId,
           content: userMessage.message,
         },
-        { headers: { Authorization: localStorage.getItem("token") } }
       );
 
       // console.log("Sent your message!");

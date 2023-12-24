@@ -6,18 +6,15 @@ import {
   TrashIcon,
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../../api";
 
 export function GenreList({ displayedUserId }) {
   const [genresList, setGenresList] = useState([]);
 
   useEffect(() => {
     const getGenreInfo = async () => {
-      const genreInfo = await axios.get(
+      const genreInfo = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       setGenresList(genreInfo.data.genreInterests.map((genre) => genre.name)); // check what's in genreInfo
     };

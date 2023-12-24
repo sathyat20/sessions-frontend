@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import { useLocation } from "react-router-dom";
 import { GroupPictureUpload } from "./GroupPictureUpload";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../api";
 import { GroupVideoUpload } from "./GroupVideoUpload";
 
 export const NewGroupPage = ({ motion }) => {
@@ -36,7 +36,7 @@ export const NewGroupPage = ({ motion }) => {
 
     try {
       console.log(profilePictureUrl)
-      const response = await axios.post(
+      const response = await apiRequest.post(
         `${process.env.REACT_APP_BACKEND_URL}/groups/newgroup`,
         {
           groupName,
@@ -46,11 +46,6 @@ export const NewGroupPage = ({ motion }) => {
           bio,
           profilePictureUrl,
           videoClips: videoUrls,
-        },
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-          },
         }
       );
 

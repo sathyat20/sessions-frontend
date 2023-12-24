@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { CategoryDropDown } from "../CategoryDropDown/CategoryDropDown";
-import axios from "axios";
 import { useNavigate, createSearchParams, useParams } from "react-router-dom";
 import {CategoryBlock} from "./CategoryBlock"
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
@@ -32,8 +31,6 @@ export const SearchInput = ({ motion }) => {
           })
     }
   };
-  // Axios GET Placeholders
-  
   
   const categoryButtons = STORED_CATEGORIES[searchMode].map((category)=>{
     return (

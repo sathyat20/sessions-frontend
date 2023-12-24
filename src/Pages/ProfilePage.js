@@ -13,7 +13,7 @@ import { NotificationsButton } from "../Components/Buttons/NotificationsButton";
 import { StartChatButton } from "../Components/Buttons/StartChatButton";
 import { ArrowLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { NotificationsModal } from "../Components/Buttons/NotificationsModal";
-import axios from "axios";
+import apiRequest from "../api";
 
 export const ProfilePage = ({ motion, loggedInUserId }) => {
   const { pageOwnerUserId } = useParams();
@@ -33,13 +33,10 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   //Load info for the current user being displayed(also retrieved the logged in user's id)
   useEffect(() => {
     const getUserInfo = async () => {
-      const pulledPageOwnerInfo = await axios.get(
+      const pulledPageOwnerInfo = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/${
           pageOwnerUserId ? pageOwnerUserId : "getCurrentUser"
         }`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       console.log(pulledPageOwnerInfo)
       setPageOwnerInfo({ ...pulledPageOwnerInfo.data.user });
@@ -55,11 +52,8 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   //Load notifications for the logged in user
   useEffect(() => {
     const getNotifications = async () => {
-      const retrievedNotifications = await axios.get(
+      const retrievedNotifications = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/notifications/`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       const readStatus = retrievedNotifications.data.notifications.reduce(
         (acc, notification) => {
@@ -87,6 +81,21 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   const removeModal = () => {
     setEditProfileModalToggle(false);
   };
+
+  const handleLogOut = async () => {
+    const accessToken = localStorage.getItem("token")
+    const refreshToken = localStorage.getItem("refresh")
+    const response = await apiRequest.put(`${process.env.REACT_APP_BACKEND_URL}/users/jwtLogOut`,
+      {
+        accessToken,
+        refreshToken
+      }
+    )     
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh")
+    context.setUserId(null);
+    navigate("/");
+  }
 
   return (
     <>
@@ -196,11 +205,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
               <input
                 type="button"
                 value="LOGOUT"
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  context.setUserId(null);
-                  navigate("/");
-                }}
+                onClick={() => {handleLogOut()}}
                 className="secondary-cta-btn w-[100%] lg:w-[100%]"
               />
             </form>

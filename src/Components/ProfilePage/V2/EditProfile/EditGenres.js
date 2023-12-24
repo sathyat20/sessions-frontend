@@ -6,7 +6,7 @@ import {
   TrashIcon,
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../../../api";
 
 export function EditGenres({ displayedUserId }) {
   const [genresList, setGenresList] = useState([]);
@@ -15,12 +15,7 @@ export function EditGenres({ displayedUserId }) {
 
   useEffect(() => {
     const getGenreInfo = async () => {
-      const genreInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
+      const genreInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`);
       setGenresList(genreInfo.data.genreInterests.map((genre) => genre.name)); // check what's in genreInfo
     };
     getGenreInfo();
@@ -28,22 +23,14 @@ export function EditGenres({ displayedUserId }) {
 
   const writeData = async () => {
     setIsBeingEdited(false);
-    await axios.put(
+    await apiRequest.put(
       `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
       { genresList },
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
     );
   };
 
   const revertData = async () => {
-    const genreInfo = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
-    );
+    const genreInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`);
     setIsBeingEdited(false);
     setGenresList(genreInfo.data.genreInterests.map((genre) => genre.name));
   };

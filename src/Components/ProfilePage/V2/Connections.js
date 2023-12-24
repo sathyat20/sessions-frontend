@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiRequest from "../../../api";
 import { useNavigate } from "react-router-dom";
 
 export function Connections({ displayedUserId }) {
@@ -8,11 +8,8 @@ export function Connections({ displayedUserId }) {
   
     useEffect(() => {
       const getConnections = async () => {
-        const connections = await axios.get(
+        const connections = await apiRequest.get(
           `${process.env.REACT_APP_BACKEND_URL}/connections/${displayedUserId}`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
         );
         setConnectionsList(connections); // replace depending on what comes out of the console.log
       };

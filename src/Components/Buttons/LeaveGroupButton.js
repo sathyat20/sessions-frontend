@@ -1,5 +1,5 @@
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,11 +8,7 @@ export function LeaveGroupButton({userId, groupId}) {
     const handleLeaveGroup = async() => {
         const response = window.confirm(`Are you sure you want to leave the group?`)
             if (response) {
-                await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/${userId}`,
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                }
-            )
+                await apiRequest.delete(`${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/${userId}`)
             navigate("/groups")
             }
     }

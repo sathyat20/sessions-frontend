@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import apiRequest from "../../../../api";
 import {VideoTile} from "../../../VideoTile.js";
 import { PencilSquareIcon, PlusCircleIcon, XCircleIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
 import { storage } from "../../../../firebase/firebase.js";
@@ -12,12 +13,7 @@ export function EditClips({ displayedUserId }) {
   
     useEffect(() => {
       const getClips = async () => {
-        const clips = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/clips`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        );
+        const clips = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/clips`);
         setClipsList(clips.data); 
       };
       getClips();
@@ -28,12 +24,9 @@ export function EditClips({ displayedUserId }) {
     uploadBytes(fileRef, newClip)
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
-        const addedClip = axios.post(`${process.env.REACT_APP_BACKEND_URL}/users/clips`, {
+        const addedClip = apiRequest.post(`${process.env.REACT_APP_BACKEND_URL}/users/clips`, {
           hostUrl: url,
-        },
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          })
+        })
         return addedClip;
       })
       .then((addedClip) => {
@@ -53,10 +46,7 @@ export function EditClips({ displayedUserId }) {
           const fileName = url.split('%2F')[2].split('?')[0]
           const fileRef = sRef(storage, `videoclips/${displayedUserId}/${fileName}`);
           deleteObject(fileRef);
-            axios.delete(`${process.env.REACT_APP_BACKEND_URL}/users/clips/${clipId}`, 
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-          });
+            apiRequest.delete(`${process.env.REACT_APP_BACKEND_URL}/users/clips/${clipId}`);
           setClipsList((prevState)=>{
             prevState.splice(clipIndex, 1);
             return [...prevState]

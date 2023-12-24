@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CategoryDropDown } from "../Components/CategoryDropDown/CategoryDropDown";
-import axios from "axios";
+import apiRequest from "../api";
 import { UserProfileModal } from "../Components/SearchPage/UserProfileModal";
 import { Outlet } from "react-router-dom";
 
@@ -21,11 +21,11 @@ export const SearchPage = ({ motion }) => {
   useEffect(() => {
     // console.log("getting current user");
     const getCurrentUser = async () => {
-      let currentUserInfo = await axios.get(
+      let currentUserInfo = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
+        // {
+        //   headers: { Authorization: localStorage.getItem("token") },
+        // }
       );
       setUserId(currentUserInfo.data.user.id);
     };
@@ -36,11 +36,8 @@ export const SearchPage = ({ motion }) => {
 
   const handleChangeCategory = async (ev) => {
     if (ev.target.id !== "") {
-      const response = await axios.get(
+      const response = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/${ev.target.id.toLowerCase()}`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       const searchTerms = response.data.map((entry) => entry.name);
       setSearchTermsList(searchTerms);
@@ -64,11 +61,8 @@ export const SearchPage = ({ motion }) => {
     if (!selectedCategory || !selectedSearchTerm) {
       alert("Please select filter criteria");
     } else {
-      const response = await axios.get(
+      const response = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/filteredusers/${selectedCategory.toLowerCase()}/${selectedSearchTerm}`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       setSearchedUsers(response.data.filteredUsers);
     }

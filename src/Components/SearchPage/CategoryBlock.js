@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 
 export const CategoryBlock = ({ searchMode, category, filterCriteria, setFilterCriteria }) => {
     const [options, setOptions] = useState([])
@@ -9,12 +9,8 @@ export const CategoryBlock = ({ searchMode, category, filterCriteria, setFilterC
 
     useEffect(() => {
         const getOptionsFromDatabase = async () => {
-            const response = await axios.get(
-                `${process.env.REACT_APP_BACKEND_URL}/${category.toLowerCase()}`,
-                {
-                  headers: { Authorization: localStorage.getItem("token") },
-                }
-              );
+            const response = await apiRequest.get(
+                `${process.env.REACT_APP_BACKEND_URL}/${category.toLowerCase()}`);
               setOptions(response.data.map((entry) => entry.name));  
         }
 

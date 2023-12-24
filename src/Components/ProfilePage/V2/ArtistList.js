@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
+import apiRequest from "../../../api";
 
 export function ArtistList({ displayedUserId }) {
   const [artistsList, setArtistsList] = useState([]);
 
   useEffect(() => {
     const getArtistInfo = async () => {
-      const artistInfo = await axios.get(
+      const artistInfo = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       setArtistsList(
         artistInfo.data.artistInterests.map((artist) => artist.name)

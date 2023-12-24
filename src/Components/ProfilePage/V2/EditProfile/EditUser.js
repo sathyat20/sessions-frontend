@@ -4,7 +4,7 @@ import {
   XCircleIcon,
   PencilSquareIcon,
 } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../../../api";
 import Select from "react-select";
 
 export function EditUser({ pageOwnerInfo }) {
@@ -34,12 +34,9 @@ const careerStatusList = [
   };
 
   const writeData = async () => {
-    const response = await axios.put(
+    const response = await apiRequest.put(
       `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerInfo.id}/`, // to edit later
        userInfo,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
     );
     console.log(response.data)
     setUserInfo(response.data.editedUser[1][0]);
@@ -47,12 +44,7 @@ const careerStatusList = [
   };
 
   const revertData = async () => {
-    const storedUserInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
-    );
+    const storedUserInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`);
     setIsBeingEdited(false);
     setUserInfo(storedUserInfo.data.user); // we need to edit this later based on what comes out of storedUserInfo
   }

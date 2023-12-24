@@ -1,5 +1,5 @@
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 import { useNavigate } from "react-router-dom";
 
 // Import Sockets
@@ -10,16 +10,13 @@ export function StartChatButton({requestedId, requesterName, requestedName}) {
     const navigate = useNavigate();
 
     const handleCreateRoomForTwo = async () => {
-          const createdRoom = await axios.post(
+          const createdRoom = await apiRequest.post(
             `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroomForTwo`,
             {
               secondUserId: requestedId,
               name: `${requesterName} and ${requestedName}`,
               genresPlayed: "",
               instrumentsWanted: "",
-            },
-            {
-              headers: { Authorization: localStorage.getItem("token") },
             }
           );
           const chatRoomId = createdRoom.data.data[0][0].chatroomId;

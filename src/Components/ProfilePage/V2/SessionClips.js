@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiRequest from "../../../api";
 import {VideoTile} from "../../VideoTile.js";
 
 export function SessionClips({ displayedUserId }) {
@@ -7,11 +7,8 @@ export function SessionClips({ displayedUserId }) {
   
     useEffect(() => {
       const getClips = async () => {
-        const clips = await axios.get(
+        const clips = await apiRequest.get(
           `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/clips`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
         );
         setClipsList(clips); // replace depending on what comes out of the console.log
       };

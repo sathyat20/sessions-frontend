@@ -41,6 +41,7 @@ export const SignUpPage = ({ motion }) => {
     if (checkUser.data.success === true) {
       console.log("Bearer " + checkUser.data.data);
       localStorage.setItem("token", "Bearer " + checkUser.data.data);
+      localStorage.setItem("refresh", "Bearer " + checkUser.data.refresh)
 
       alert("New User Created!");
       navigate("/profilepictureupload");

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 
 // Import Firebase Db and Methods
 import { storage } from "../../firebase/firebase.js"; // Reference to Firebase Storage Db
@@ -17,7 +17,7 @@ export const AttachmentModal = ({
   chatroomId,
   refreshAttachments,
 }) => {
-  const [tokenAuth, setTokenAuth] = useState(null);
+  // const [tokenAuth, setTokenAuth] = useState(null);
   const [uploadedFile, setUploadFile] = useState({
     fileInputFile: null,
   });
@@ -31,10 +31,10 @@ export const AttachmentModal = ({
   // let chatroomId;
   // let { chatroomId } = useParams();
 
-  useEffect(() => {
-    let TOKEN = localStorage.getItem("token");
-    setTokenAuth(TOKEN);
-  }, []);
+  // useEffect(() => {
+  //   let TOKEN = localStorage.getItem("token");
+  //   setTokenAuth(TOKEN);
+  // }, []);
 
   const handleTextChange = (ev) => {
     let name = ev.target.name;
@@ -64,14 +64,12 @@ export const AttachmentModal = ({
 
     if (userMessage) {
       // POST message to Database
-      newMessage = await axios.post(
+      newMessage = await apiRequest.post(
         `${process.env.REACT_APP_BACKEND_URL}/users/postNewMessage`,
         {
-          // userId: userId,
           chatroomId: chatroomId,
           content: userMessage.message,
         },
-        { headers: { Authorization: localStorage.getItem("token") } }
       );
 
       // Q: NOT SURE WHY WE DON'T NEED TO SET STATE HERE. It duplicates for some reason.
@@ -98,7 +96,7 @@ export const AttachmentModal = ({
             .then(async () => {
               // POST the attachment-message relationship
 
-              let newAttachment = await axios.post(
+              let newAttachment = await apiRequest.post(
                 `${process.env.REACT_APP_BACKEND_URL}/users/postMessageAttachment`,
                 {
                   mediaURL: uploadURL,
@@ -106,7 +104,7 @@ export const AttachmentModal = ({
                   chatroomId: chatroomId,
                   fileType: uploadedFile.fileInputFile.type,
                 },
-                { headers: { Authorization: tokenAuth } }
+                // { headers: { Authorization: tokenAuth } }
               );
               await refreshAttachments();
               if (chatroomId) {

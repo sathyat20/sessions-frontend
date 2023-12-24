@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 import { VideoTile } from "../VideoTile.js";
 import {
   PencilSquareIcon,
@@ -24,11 +24,8 @@ export function EditGroupClips({ displayedGroupId, onEditSaved }) {
 
   useEffect(() => {
     const getClips = async () => {
-      const response = await axios.get(
+      const response = await apiRequest.get(
         `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       setClipsList(response.data || []);
     };
@@ -43,10 +40,9 @@ export function EditGroupClips({ displayedGroupId, onEditSaved }) {
     uploadBytes(fileRef, newVideo.file)
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
-        return axios.post(
+        return apiRequest.post(
           `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
-          { hostUrl: url, groupId: displayedGroupId, userId },
-          { headers: { Authorization: localStorage.getItem("token") } }
+          { hostUrl: url, groupId: displayedGroupId, userId }
         );
       })
       .then((addedClip) => {
@@ -66,11 +62,8 @@ export function EditGroupClips({ displayedGroupId, onEditSaved }) {
       );
       deleteObject(fileRef)
         .then(() => {
-          return axios.delete(
-            `${process.env.REACT_APP_BACKEND_URL}/groups/clips/${clipId}`,
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
+          return apiRequest.delete(
+            `${process.env.REACT_APP_BACKEND_URL}/groups/clips/${clipId}`
           );
         })
         .then(() => {

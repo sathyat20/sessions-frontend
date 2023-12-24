@@ -1,7 +1,6 @@
 import { UserGroupIcon } from "@heroicons/react/20/solid";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-//need to add in the code to prevent this from displaying on nonadmins' pages
 export function EditMemberButton({groupId, editMemberModalToggle, setEditMemberModalToggle, members, userId}) {
 
     const adminIds = members?.map((member)=>{

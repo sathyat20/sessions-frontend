@@ -1,4 +1,4 @@
-//NOT IN USE
+/* DEPRECATED */
 
 import React, { useEffect, useState } from "react";
 import {

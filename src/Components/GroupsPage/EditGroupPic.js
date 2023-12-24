@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 import { storage } from "../../firebase/firebase";
 import { ref as sRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { XCircleIcon, PencilSquareIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
@@ -16,13 +16,10 @@ const updateGroupPicture = async () => {
     .then(() => getDownloadURL(fileRef))
     .then(async (url) => {
       try {
-        await axios.put(
+        await apiRequest.put(
           `${process.env.REACT_APP_BACKEND_URL}/groups/edit/${groupId}`,
           {
             profilePictureUrl: url,
-          },
-          {
-            headers: { Authorization: localStorage.getItem("token") },
           }
         );
         // Update the state to trigger a re-render
