@@ -84,7 +84,6 @@ export function SingleInstrumentEdit({ userInstrument, fullInstrumentsList, full
 
     return (
         <div className='flex flex-row m-2'>
-        {console.log(fullQualificationsList)}
             {!isBeingEdited ?
                 userInstrument ?
                     <section className='text-sm w-5/6'>

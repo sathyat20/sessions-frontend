@@ -10,7 +10,7 @@ export const NewGroupPage = ({ motion }) => {
   const [groupName, setGroupName] = useState("");
   const [ensembleType, setEnsembleType] = useState("");
   const [bio, setBio] = useState("");
-  const [isProfessional, setIsProfessional] = useState(null);
+  const [groupStatus, setGroupStatus] = useState('Professional');
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [videoUrls, setVideoUrls] = useState([])
 
@@ -19,8 +19,8 @@ export const NewGroupPage = ({ motion }) => {
   };
 
     const getButtonClass = (value) => {
-      return `bg-blue-400 text-white rounded px-4 py-2 ${
-        isProfessional === value ? "bg-blue-700" : ""
+      return `bg-blue-400 text-white rounded px-2 py-2 shadow ${
+        groupStatus === value ? "bg-blue-700" : ""
       }`;
     };
 
@@ -42,7 +42,7 @@ export const NewGroupPage = ({ motion }) => {
           groupName,
           isPublic: true,
           ensembleType,
-          careerStatus: isProfessional ? "Professional" : "Amateur",
+          careerStatus: groupStatus,
           bio,
           profilePictureUrl,
           videoClips: videoUrls,
@@ -109,16 +109,28 @@ export const NewGroupPage = ({ motion }) => {
           <div className="rounded flex items-center justify-center">
             {/* Placeholder for session clip */}
             <button
-              onClick={() => setIsProfessional(true)}
-              className={getButtonClass(true)}
+              onClick={() => setGroupStatus('Professional')}
+              className={getButtonClass('Professional')}
             >
               Professional
             </button>
             <button
-              onClick={() => setIsProfessional(false)}
-              className={getButtonClass(false)}
+              onClick={() => setGroupStatus('Semi-Pro')}
+              className={getButtonClass('Semi-Pro')}
+            >
+              Semi-Pro
+            </button>
+            <button
+              onClick={() => setGroupStatus('Amateur')}
+              className={getButtonClass('Amateur')}
             >
               Amateur
+            </button>
+            <button
+              onClick={() => setGroupStatus('School')}
+              className={getButtonClass('School')}
+            >
+              School
             </button>
           </div>
         </div>

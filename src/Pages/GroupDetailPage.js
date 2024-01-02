@@ -111,7 +111,7 @@ export const GroupDetailPage = ({ motion }) => {
                   <img
                     src={group.profilePictureUrl}
                     alt={`${group.groupName} Profile`}
-                    className="mx-auto h-48 w-full object-cover rounded"
+                    className=" mx-auto h-48 w-[80%] object-cover rounded shadow "
                   />
                 )}
 
@@ -148,10 +148,10 @@ export const GroupDetailPage = ({ motion }) => {
 
               {/* About Us */}
               <div className="mb-8">
-                <h2 className="text-3xl text-yellow-400 font-bold mb-4">
+                <h2 className="text-3xl text-yellow-400 font-bold mb-4 text-left">
                   ABOUT US
                 </h2>
-                <p>{group.bio}</p>
+                <p className = "text-justify">{group.bio}</p>
               </div>
 
               {/* Members */}

@@ -38,8 +38,8 @@ export function EditInstrumentsV3({ displayedUserId }) {
 
   const fullQualificationsList = [
     {value:'Self Taught', label:'Self Taught'},
-    {value:'Low Grade(eg ABRSM 1-5)', label:'Low Grade(eg ABRSM 1-5)'},
-    {value:'High Grade(eg ABRSM 6-8)', label:'High Grade(eg ABRSM 6-8)'},
+    {value:'Low Grade', label:'Low Grade(eg ABRSM 1-5)'},
+    {value:'High Grade', label:'High Grade(eg ABRSM 6-8)'},
     {value:'Diploma', label:'Diploma'},
     {value:"Bachelor's degree", label: "Bachelor's degree"},
     {value:"Master's degree", label: "Master's degree"},
