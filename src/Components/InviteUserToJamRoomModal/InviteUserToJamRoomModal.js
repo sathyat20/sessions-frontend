@@ -33,7 +33,7 @@ export const InviteUserToJamRoomModal = ({ removeModal, chatroomId }) => {
       console.log(textField.invitedUserId);
 
       let invitedUser = await apiRequest.post(
-        `${process.env.REACT_APP_BACKEND_URL}/chatrooms/addUserToChatroom`,
+        `chatrooms/addUserToChatroom`,
         {
           chatroomId: chatroomId,
           username: textField.invitedUserId,

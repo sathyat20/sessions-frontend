@@ -31,7 +31,7 @@ export const UserProfileModal = ({ pageOwnerUserId, removeModal }) => {
 
     useEffect(()=>{
         const getUserInfo = async () => {
-          const retrievedPageOwnerInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerUserId}`)
+          const retrievedPageOwnerInfo = await apiRequest.get(`users/${pageOwnerUserId}`)
           setPageOwnerInfo(retrievedPageOwnerInfo.data.user)
         }
     getUserInfo();
@@ -40,7 +40,7 @@ export const UserProfileModal = ({ pageOwnerUserId, removeModal }) => {
   const handleCreateRoomForTwo = async () => {
     if (textField.roomname != "") {
       const createdRoom = await apiRequest.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroomForTwo`,
+        `users/createNewChatroomForTwo`,
         {
           secondUserId: pageOwnerInfo.id,
           name: textField.roomname,

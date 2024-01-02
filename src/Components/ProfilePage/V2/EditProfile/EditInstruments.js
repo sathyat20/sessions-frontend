@@ -21,11 +21,11 @@ export function EditInstruments({ displayedUserId }) {
 
   useEffect(() => {
     const getUserInstrumentsInfo = async () => {
-      const userInstrumentsInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`);
+      const userInstrumentsInfo = await apiRequest.get(`users/${displayedUserId}/instruments`);
       setUserInstrumentsList(userInstrumentsInfo.data.playedInstruments);
     };
     const getFullInstrumentsList = async () => {
-      const fullInstrumentsInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/instruments/selectable`);
+      const fullInstrumentsInfo = await apiRequest.get(`instruments/selectable`);
       setFullInstrumentsList(fullInstrumentsInfo.data);
     };
     getUserInstrumentsInfo();
@@ -45,7 +45,7 @@ export function EditInstruments({ displayedUserId }) {
   const writeData = async () => {
     setIsBeingEdited(false);
     await apiRequest.put(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`,
+      `users/${displayedUserId}/instruments`,
       {
         userInstrumentsList,
       },
@@ -53,7 +53,7 @@ export function EditInstruments({ displayedUserId }) {
   };
 
   const revertData = async () => {
-    const instrumentInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`);
+    const instrumentInfo = await apiRequest.get(`users/${displayedUserId}/instruments`);
     setIsBeingEdited(false);
     setUserInstrumentsList(instrumentInfo.data.playedInstruments);
   };

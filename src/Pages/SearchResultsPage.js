@@ -14,7 +14,7 @@ export const SearchResultsPage = ({ motion }) => {
 
     useEffect(() => {
         const getResults = async () => {
-          const response = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/${searchMode}/search`,
+          const response = await apiRequest.get(`${searchMode}/search`,
           {
             params: searchParams 
           } 

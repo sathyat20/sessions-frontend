@@ -53,7 +53,7 @@ export const SearchInput = ({ motion }) => {
 
   return (
       <div className = 'w-full '>
-          <div className="flex flex-col justify-around pt-[2em] gap-[1em] h-[100%] lg:h-[45%] w-full">
+          <div className="flex flex-col justify-around gap-[1em] h-[100%] lg:h-[45%] w-full">
           <button onClick={() => navigate(-1)}>
                   <ArrowLeftIcon class="h-6 w-6 text-gray-500" />
                 </button>

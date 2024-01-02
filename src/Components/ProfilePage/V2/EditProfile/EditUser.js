@@ -35,7 +35,7 @@ const careerStatusList = [
 
   const writeData = async () => {
     const response = await apiRequest.put(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerInfo.id}/`, // to edit later
+      `users/${pageOwnerInfo.id}/`, // to edit later
        userInfo,
     );
     console.log(response.data)
@@ -44,7 +44,7 @@ const careerStatusList = [
   };
 
   const revertData = async () => {
-    const storedUserInfo = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`);
+    const storedUserInfo = await apiRequest.get(`users/getCurrentUser`);
     setIsBeingEdited(false);
     setUserInfo(storedUserInfo.data.user); // we need to edit this later based on what comes out of storedUserInfo
   }
@@ -59,7 +59,7 @@ const careerStatusList = [
 
   return (
     <div className = 'py-[1em]'>
-    {console.log(userInfo)}
+    {console.log(userInfo.experience)}
       <div className="flex flex-row">
         <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left ">
           USER PROFILE
@@ -74,30 +74,6 @@ const careerStatusList = [
           id={`editButton-user`}
           style={{ display: "none" }}
         />
-        {isBeingEdited ? (
-          <div className="flex flex-row">
-            <label for={`confirmButton-user`}>
-              <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
-            </label>
-            <button
-              id={`confirmButton-user`}
-              style={{ display: "none" }}
-              onClick={() => {
-                writeData();
-              }}
-            />
-            <label for={`rejectButton-user`}>
-              <XCircleIcon className="h-6 w-6 text-red-500 cursor-pointer" />
-            </label>
-            <button
-              id={`rejectButton-user`}
-              style={{ display: "none" }}
-              onClick={() => {
-                revertData();
-              }}
-            />
-          </div>
-        ) : null}
       </div>
           <section id='Name'>
               <p className="font-bold text-slate-800 text-sm">Full Name: &nbsp;</p> 
@@ -131,8 +107,8 @@ const careerStatusList = [
                   <p>
                   with &nbsp; 
                   <input
-                    className = 'border border-slate-300'
-                      type="text"
+                    className = 'border border-slate-300 w-[2em]'
+                      type="number"
                       size = "1"
                       id="experience"
                       value={userInfo.experience}
@@ -164,6 +140,36 @@ const careerStatusList = [
               ) : (
                   userInfo.bio
               )}
+              {isBeingEdited ? (
+          <div className="flex flex-row justify-center">
+            <label for={`confirmButton-user`}>
+            <div className = "flex flex-row bg-green-200 rounded-lg p-0.5 m-2 font-semibold shadow-md">
+            Save changes
+              <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
+              </div>
+            </label>
+            <button
+              id={`confirmButton-user`}
+              style={{ display: "none" }}
+              onClick={() => {
+                writeData();
+              }}
+            />
+            <label for={`rejectButton-user`}>
+            <div className = "flex flex-row bg-red-200 rounded-lg p-0.5  m-2 font-semibold shadow-md">
+            Cancel
+              <XCircleIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+              </div>
+            </label>
+            <button
+              id={`rejectButton-user`}
+              style={{ display: "none" }}
+              onClick={() => {
+                revertData();
+              }}
+            />
+          </div>
+        ) : null}
           </section>
       </div>
   );

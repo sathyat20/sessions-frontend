@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import apiRequest from "../../../../api";
 import {VideoTile} from "../../../VideoTile.js";
 import { PencilSquareIcon, PlusCircleIcon, XCircleIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
@@ -13,7 +12,7 @@ export function EditClips({ displayedUserId }) {
   
     useEffect(() => {
       const getClips = async () => {
-        const clips = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/clips`);
+        const clips = await apiRequest.get(`users/${displayedUserId}/clips`);
         setClipsList(clips.data); 
       };
       getClips();
@@ -24,7 +23,7 @@ export function EditClips({ displayedUserId }) {
     uploadBytes(fileRef, newClip)
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
-        const addedClip = apiRequest.post(`${process.env.REACT_APP_BACKEND_URL}/users/clips`, {
+        const addedClip = apiRequest.post(`users/clips`, {
           hostUrl: url,
         })
         return addedClip;
@@ -46,7 +45,7 @@ export function EditClips({ displayedUserId }) {
           const fileName = url.split('%2F')[2].split('?')[0]
           const fileRef = sRef(storage, `videoclips/${displayedUserId}/${fileName}`);
           deleteObject(fileRef);
-            apiRequest.delete(`${process.env.REACT_APP_BACKEND_URL}/users/clips/${clipId}`);
+            apiRequest.delete(`users/clips/${clipId}`);
           setClipsList((prevState)=>{
             prevState.splice(clipIndex, 1);
             return [...prevState]
@@ -58,7 +57,6 @@ export function EditClips({ displayedUserId }) {
       return (
         <div className = 'relative m-2' key={clip.id}>
           <VideoTile videoId={clip.id} videoUrl={clip.hostUrl} />
-          {console.log(clip)}
           {isBeingEdited ?
             <div
               onClick={() => deleteClip(clip.hostUrl, clip.id, index)}
@@ -72,11 +70,12 @@ export function EditClips({ displayedUserId }) {
   
     return (
         <div className = 'my-4 p-2 border border-black'>
-        {console.log(clipsList)}
         <section className = 'flex flex-row'>
             <h1 className="font-bold text-txtcolor-primary text-[1.2rem] text-left">
                 SESSION CLIPS
             </h1>
+            {!isBeingEdited ? 
+            <div>
             <label for={`editButton-clips`}>
                     <PencilSquareIcon className="h-6 w-6 text-gray-500 cursor-pointer" />
             </label>
@@ -85,15 +84,17 @@ export function EditClips({ displayedUserId }) {
                 id={`editButton-clips`}
                 style={{ display: "none" }}
             />
+            </div> 
+            : null}
         </section>
         <section className={`text-[1.5rem] font-semibold leading-[1.2em] flex flex-row ${isBeingEdited ? 'flex-wrap' : ''} justify-around overflow-x-scroll`}>
           {displayedClips}
         </section>
         {isBeingEdited ? (
           <section className='flex flex-row justify-center'>
-            <div className = 'bg-yellow-300 rounded-lg '>
-            {newVideo ? 
-                <div className = 'flex flex-row items-center'>
+            <div className='bg-yellow-300 rounded-lg '>
+              {newVideo ?
+                <div className='flex flex-row items-center'>
 
                   <div className='flex flex-col items-center p-[0.5em]'>
                     <p className='font-bold'>Preview</p>
@@ -115,13 +116,13 @@ export function EditClips({ displayedUserId }) {
                   </div>
 
                 </div>
-            :
-            <label for={`addClip`} className = 'flex flex-row p-[0.5em]  items-center'>
-            <div className = 'flex flex-row px-[1em]'>
-              <p className = 'pr-[0.25em] font-bold'>Add Clip</p> 
-              <PlusCircleIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
-            </div>
-            </label>}
+                :
+                <label for={`addClip`} className='flex flex-row p-[0.5em]  items-center'>
+                  <div className='flex flex-row px-[1em]'>
+                    <p className='pr-[0.25em] font-bold'>Add Clip</p>
+                    <PlusCircleIcon class="h-6 w-6 text-gray-500 cursor-pointer" />
+                  </div>
+                </label>}
             </div>
             
             <input
@@ -135,7 +136,22 @@ export function EditClips({ displayedUserId }) {
             />
           </section>
             ) : null}
-
+            
+            {isBeingEdited ? 
+            <div className = 'flex flex-row justify-center w-full'>
+            <label for={`confirmButton-user`}>
+            <div className = "flex flex-row bg-green-200 rounded-lg p-0.5 border border-black m-2 font-bold">
+            Done
+              <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
+              </div>
+            </label>
+            <button
+              id={`confirmButton-user`}
+              style={{ display: "none" }}
+              onClick={() => setIsBeingEdited(!isBeingEdited)}
+            />
+            </div>
+          :null}
         </div>
     );
 }

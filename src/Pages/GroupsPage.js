@@ -16,9 +16,7 @@ export const GroupsPage = ({ motion }) => {
          return;
        }
       try {
-        const response = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/${userId}`,
-        );
+        const response = await apiRequest.get(`groups/${userId}`);
         console.log(response.data)
         setGroups(response.data);
       } catch (err) {

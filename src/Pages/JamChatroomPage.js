@@ -42,9 +42,7 @@ export const JamChatroomPage = ({ motion }) => {
     if (tokenAuth) {
       // console.log("getting current user");
       const getCurrentUser = async () => {
-        let currentUserInfo = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`
-        );
+        let currentUserInfo = await apiRequest.get(`users/getCurrentUser`);
         setCurrentUser(currentUserInfo.data.user);
         setUserId(currentUserInfo.data.user.id);
 
@@ -106,9 +104,7 @@ export const JamChatroomPage = ({ motion }) => {
   };
 
   const getRoomData = async () => {
-    let userRoomInformation = await apiRequest.get(
-      `${process.env.REACT_APP_BACKEND_URL}/users/joinedChatrooms`
-    );
+    let userRoomInformation = await apiRequest.get(`users/joinedChatrooms`);
 
     if (userRoomInformation.data.success === true) {
       setUserRoomData(userRoomInformation.data.data);

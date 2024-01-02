@@ -34,11 +34,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   useEffect(() => {
     const getUserInfo = async () => {
       const pulledPageOwnerInfo = await apiRequest.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/${
-          pageOwnerUserId ? pageOwnerUserId : "getCurrentUser"
-        }`,
-      );
-      console.log(pulledPageOwnerInfo)
+        `users/${pageOwnerUserId ? pageOwnerUserId : "getCurrentUser"}`);
       setPageOwnerInfo({ ...pulledPageOwnerInfo.data.user });
       setUserId(pulledPageOwnerInfo.data.ownId);
       setIsOwnPage(
@@ -52,9 +48,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   //Load notifications for the logged in user
   useEffect(() => {
     const getNotifications = async () => {
-      const retrievedNotifications = await apiRequest.get(
-        `${process.env.REACT_APP_BACKEND_URL}/notifications/`,
-      );
+      const retrievedNotifications = await apiRequest.get(`notifications`);
       const readStatus = retrievedNotifications.data.notifications.reduce(
         (acc, notification) => {
           return acc && notification.hasBeenViewed;
@@ -85,7 +79,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   const handleLogOut = async () => {
     const accessToken = localStorage.getItem("token")
     const refreshToken = localStorage.getItem("refresh")
-    const response = await apiRequest.put(`${process.env.REACT_APP_BACKEND_URL}/users/jwtLogOut`,
+    const response = await apiRequest.put(`users/jwtLogOut`,
       {
         accessToken,
         refreshToken
@@ -99,9 +93,6 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
 
   return (
     <>
-    {console.log(isOwnPage)}
-    {console.log(userId)}
-    {console.log(pageOwnerUserId)}
       <div className="flex flex-row justify-center h-[93dvh] pt-[2em] pb-[4em] px-[2em] w-full overflow-y-auto">
         {/* <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-visible overflow-y-auto"> */}
         <div className="flex flex-col pt-[2em] mb-[-10em] w-full">
@@ -118,7 +109,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             {pageOwnerInfo ? (
               <section>
                 <div className="flex flex-col items-center pb-[1em] relative overflow-visible">
-                  <div className="w-[15em] h-[15em] rounded-[50%] overflow-hidden ">
+                  <div className="w-[15em] h-[15em] rounded-[50%] overflow-hidden shadow-md">
                     <img
                       src={pageOwnerInfo.profilePictureUrl}
                       alt="Profile photo"
@@ -126,7 +117,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
                     />
                   </div>
 
-                  <div className="h-[10em] w-[2em] absolute top-10 -left-8 bg-blue-900 rounded-r-md z-[8]">
+                  <div className="h-[10em] w-[2em] absolute top-10 -left-8 bg-blue-900 rounded-r-md z-[8] shadow-md shadow-black">
                     {isOwnPage ? (
                       <div className="flex flex-col h-full rounded-r-md justify-evenly items-center">
                         <button

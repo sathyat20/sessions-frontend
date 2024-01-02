@@ -62,7 +62,7 @@ export const SingleJamRoomPage = () => {
       console.log("getting current user");
       const getCurrentUser = async () => {
         let currentUserInfo = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`
+          `users/getCurrentUser`
         );
         setCurrentUser(currentUserInfo.data.user);
         setUserId(currentUserInfo.data.user.id);
@@ -149,7 +149,7 @@ export const SingleJamRoomPage = () => {
     //     console.log("token auth inside: ", tokenAuth);
     //     let updatedToken = localStorage.getItem("token");
     let chatroomInfo = await apiRequest.get(
-      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomMessages`
+      `chatrooms/${chatroomId}/getAllChatroomMessages`
     );
 
     if (chatroomInfo.data.success === true) {
@@ -176,7 +176,7 @@ export const SingleJamRoomPage = () => {
 
   const getChatroomUsers = async () => {
     let allUsers = await apiRequest.get(
-      `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomUsers`
+      `chatrooms/${chatroomId}/getAllChatroomUsers`
     );
     const usersInRoom = allUsers.data.data.map((user)=>user.id)
     if (!(usersInRoom.includes(userId))) {
@@ -194,7 +194,7 @@ export const SingleJamRoomPage = () => {
     console.log("auth token in attachments: ", authToken);
     if (authToken) {
       let allAttachments = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}/getAllChatroomAttachments`
+          `chatrooms/${chatroomId}/getAllChatroomAttachments`
         )
         .then((allAttachments) => {
           if (allAttachments.data.success === true) {
@@ -211,8 +211,8 @@ export const SingleJamRoomPage = () => {
   };
 
   const onEnterPress = (e) => {
+    e.preventDefault();
     if(e.keyCode == 13 && e.shiftKey == false) {
-      e.preventDefault();
       postNewMessage();
     }
   }
@@ -220,7 +220,7 @@ export const SingleJamRoomPage = () => {
   const postNewMessage = async () => {
     if (userMessage) {
       let newMessage = await apiRequest.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/postNewMessage`,
+        `users/postNewMessage`,
         {
           userId: userId,
           chatroomId: chatroomId,
@@ -269,7 +269,8 @@ export const SingleJamRoomPage = () => {
     return results;
   };
 
-  const handleAttachmentModal = () => {
+  const handleAttachmentModal = (e) => {
+    e.preventDefault();
     setAttachmentModalToggle(!attachmentModalToggle);
   };
 
@@ -336,6 +337,7 @@ export const SingleJamRoomPage = () => {
                         >
                           <SpeechBubble
                             messagedata={elementdata}
+                            key={`speechbubble-${index}`}
                             index={index}
                             userinfo={checkUser(elementdata)[0]}
                             attachmentinfo={checkMessageId(elementdata)[0]}
@@ -353,6 +355,7 @@ export const SingleJamRoomPage = () => {
                         >
                           <SpeechBubble
                             messagedata={elementdata}
+                            key={`speechbubble-${index}`}
                             index={index}
                             userinfo={checkUser(elementdata)[0]}
                             attachmentinfo={checkMessageId(elementdata)[0]}

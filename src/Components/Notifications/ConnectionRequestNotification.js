@@ -9,7 +9,7 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
         const getUserInfo = async () => {
           if (notification.sourceId) {
           const sourceInfo = await apiRequest.get(
-            `${process.env.REACT_APP_BACKEND_URL}/users/${notification.sourceId}`
+            `users/${notification.sourceId}`
             );
           setSourceUserInfo({...sourceInfo.data.user});
           }
@@ -19,7 +19,7 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
 
     const acceptReq = async () => {
         await apiRequest.put(
-            `${process.env.REACT_APP_BACKEND_URL}/connections/`,
+            `connections/`,
             { 
                 requesterId: notification.sourceId,
                 requestedId: userId,
@@ -27,7 +27,7 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
             },
           );
           await apiRequest.put(
-            `${process.env.REACT_APP_BACKEND_URL}/notifications/${notification.id}`,
+            `notifications/${notification.id}`,
             { 
                 hasBeenViewed: true
             },
@@ -38,9 +38,9 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
 
   const deleteReq = async () => {
     await apiRequest.delete(
-      `${process.env.REACT_APP_BACKEND_URL}/connections/${notification.sourceId}/${userId}`);
+      `connections/${notification.sourceId}/${userId}`);
     await apiRequest.put(
-      `${process.env.REACT_APP_BACKEND_URL}/notifications/${notification.id}`,
+      `notifications/${notification.id}`,
       {
         hasBeenViewed: true
       },

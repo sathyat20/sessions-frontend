@@ -7,7 +7,7 @@ export function Qualifications({ displayedUserId }) {
     useEffect(() => {
         const getUserInstrumentsInfo = async () => {
             const userInstrumentsInfo = await apiRequest.get(
-                `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`,
+                `users/${displayedUserId}/instruments`,
             );
             setUserInstrumentsList(userInstrumentsInfo.data.playedInstruments);
         };

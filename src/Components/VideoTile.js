@@ -25,7 +25,7 @@ export function VideoTile({ videoId, videoUrl }) {
   
     return (
         <>
-            <div className="relative text-[1.5rem] font-semibold leading-[1.2em] flex flex-row justify-center h-[4em] w-32 rounded-md overflow-hidden">
+            <div className="relative text-[1.5rem] font-semibold leading-[1.2em] flex flex-row justify-center h-[4em] w-32 rounded-md overflow-hidden shadow-sm shadow-slate-500">
                 <video
                     id={`video-${videoId}`}
                     onClick={togglePlayVideo}
@@ -38,11 +38,11 @@ export function VideoTile({ videoId, videoUrl }) {
                     />
                 </video>
                 <button
-                    className="absolute bottom-0 right-[0%] z-[30] scale-100 transition-all w-[1.5em] h-[1.5em] lg:w-[2em] lg:h-[2em] rounded-[50%] border bg-slate-300 border-white hover:scale-110 hover:cursor-pointer active:scale-95 focus:outline-none"
+                    className="absolute bottom-0 right-[0%] z-[30] scale-100 transition-all w-[1.25em] h-[1.25em] lg:w-[2em] lg:h-[2em] rounded-[50%] border bg-slate-300 hover:scale-110 hover:cursor-pointer active:scale-95 focus:outline-none shadow-md shadow-black"
                     //className = "absolute bottom-0 right-[10%] z-[30] scale-100 transition-all"
                     onClick={handleVideoToggle}
                 >
-                    <ArrowsPointingOutIcon className="text-slate-600 scale-75 " />
+                    <ArrowsPointingOutIcon className="text-slate-600 scale-75" />
                 </button>
             </div>
             {videoModalToggle && (

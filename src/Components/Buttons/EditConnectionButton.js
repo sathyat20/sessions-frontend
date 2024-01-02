@@ -9,9 +9,7 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
 
     useEffect(() => {
         const getConnections = async () => {
-            const connections = await apiRequest.get(
-                `${process.env.REACT_APP_BACKEND_URL}/connections/${requesterId}`
-            );
+            const connections = await apiRequest.get(`connections/${requesterId}`);
             const pulledIds = {};
             connections.data.forEach((connection) => {
                 const usersConnection = connection.requesterRelation ? connection.requesterRelation : connection.requestedRelation
@@ -36,7 +34,7 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
             return;
         } else if (mode === 'add') {
             const backendResponse = await apiRequest.post(
-                `${process.env.REACT_APP_BACKEND_URL}/connections/`,
+                `connections/`,
                 {requesterId, requestedId},
               );
             // setConnectedIds((prevState)=>{
@@ -48,7 +46,7 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
             const response = window.confirm(`Are you sure you want to remove ${requestedName} from your connections?`)
                 if (response) { 
                     const backendResponse = await apiRequest.delete(
-                        `${process.env.REACT_APP_BACKEND_URL}/connections/${requesterId}/${requestedId}`,
+                        `connections/${requesterId}/${requestedId}`,
                       );
                     // setConnectedIds((prevState)=>{
                     //     const {requestedId, ...others} = prevState;

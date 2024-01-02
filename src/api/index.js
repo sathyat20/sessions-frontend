@@ -8,9 +8,7 @@ const apiRequest = axios.create({
 apiRequest.interceptors.request.use(  //intercepts all requests, takes 2 functions
     async (request) => {
         //grab auth token from localstorage
-        console.log(request)
         const isLogOut = request.url.split('/').pop() === 'jwtLogOut'
-        console.log(isLogOut)
         let accessToken = localStorage.getItem('token')
         //use jwt.decode to grab the info from inside 
         const decoded = jwtDecode(accessToken) // figure out if i can take this from the req
@@ -49,3 +47,42 @@ apiRequest.interceptors.request.use(  //intercepts all requests, takes 2 functio
 )
 
 export default apiRequest;
+
+// TODO: CONVERT ABOVE CODE TO useAxios HOOK WITH BELOW CODE AS REFERENCE
+// import axios, { AxiosError } from 'axios';
+// import { useNavigate } from 'react-router-dom';
+
+// const useAxios = () => {
+//   const navigate = useNavigate();
+
+//   const instance = axios.create({
+//     baseURL: `${import.meta.env.VITE_APP_BASE_URL}/api/v1/`,
+//   });
+
+//   instance.interceptors.request.use(
+//     async (config) => {
+//       // handle config eg-: setting token
+//       return config;
+//     },
+//     (error) => Promise.reject(error),
+//   );
+
+//   instance.interceptors.response.use(
+//     (response) => response,
+//     (error: AxiosError) => {
+//       if (error.response?.status === 401) {
+//         navigate('/login');
+//       }
+//       return Promise.reject(error);
+//     },
+//   );
+
+//   return { instance };
+// };
+
+// export default useAxios;
+
+//USE THE FOLLOWING IN OTHER FILES
+// const { instance } = useAxios();
+
+// const { data } = await instance.get(`user`);

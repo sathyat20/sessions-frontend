@@ -24,9 +24,7 @@ export function EditGroupClips({ displayedGroupId, onEditSaved }) {
 
   useEffect(() => {
     const getClips = async () => {
-      const response = await apiRequest.get(
-        `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
-      );
+      const response = await apiRequest.get(`groups/${displayedGroupId}/clips`);
       setClipsList(response.data || []);
     };
     getClips();
@@ -41,7 +39,7 @@ export function EditGroupClips({ displayedGroupId, onEditSaved }) {
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
         return apiRequest.post(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/${displayedGroupId}/clips`,
+          `groups/${displayedGroupId}/clips`,
           { hostUrl: url, groupId: displayedGroupId, userId }
         );
       })
@@ -62,9 +60,7 @@ export function EditGroupClips({ displayedGroupId, onEditSaved }) {
       );
       deleteObject(fileRef)
         .then(() => {
-          return apiRequest.delete(
-            `${process.env.REACT_APP_BACKEND_URL}/groups/clips/${clipId}`
-          );
+          return apiRequest.delete(`groups/clips/${clipId}`);
         })
         .then(() => {
           setClipsList((prevState) => {

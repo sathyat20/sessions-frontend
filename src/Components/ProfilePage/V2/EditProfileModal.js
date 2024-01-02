@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { EditInstruments } from "./EditProfile/EditInstruments";
+import { EditInstrumentsV3 } from "./EditProfile/EditInstrumentsV3";
 import { EditArtists } from "./EditProfile/EditArtists";
 import { EditGenres } from "./EditProfile/EditGenres";
 import { EditUser } from "./EditProfile/EditUser";
@@ -26,9 +26,7 @@ export const EditProfileModal = ({ removeModal }) => {
 
   useEffect(() => {
     const getCurrentUser = async () => {
-      let currentUserInfo = await apiRequest.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-      );
+      let currentUserInfo = await apiRequest.get(`users/getCurrentUser`);
       setIsAuthenticated(true);
       setUserId(currentUserInfo.data.user.id);
       setPageOwnerInfo({...currentUserInfo.data.user});
@@ -57,7 +55,7 @@ export const EditProfileModal = ({ removeModal }) => {
                   <EditUser pageOwnerInfo={pageOwnerInfo} />
                   <hr />
                   <EditClips displayedUserId={userId} />
-                  <EditInstruments displayedUserId={userId} />
+                  <EditInstrumentsV3 displayedUserId={userId} />
                   <EditGenres displayedUserId={userId} />
                   <br />
                   <EditArtists displayedUserId={userId} />

@@ -16,7 +16,7 @@ export function JamRoomName({ storedRoomName, chatroomId }) {
             alert('Please enter a room name')
         } else {
             setIsBeingEdited(false);
-            apiRequest.put(`${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}`,
+            apiRequest.put(`chatrooms/${chatroomId}`,
                 { name: roomName }
             );
         }

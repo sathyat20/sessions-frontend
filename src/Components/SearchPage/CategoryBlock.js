@@ -9,8 +9,7 @@ export const CategoryBlock = ({ searchMode, category, filterCriteria, setFilterC
 
     useEffect(() => {
         const getOptionsFromDatabase = async () => {
-            const response = await apiRequest.get(
-                `${process.env.REACT_APP_BACKEND_URL}/${category.toLowerCase()}`);
+            const response = await apiRequest.get(`${category.toLowerCase()}`);
               setOptions(response.data.map((entry) => entry.name));  
         }
 

@@ -17,7 +17,7 @@ const updateGroupPicture = async () => {
     .then(async (url) => {
       try {
         await apiRequest.put(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/edit/${groupId}`,
+          `groups/edit/${groupId}`,
           {
             profilePictureUrl: url,
           }

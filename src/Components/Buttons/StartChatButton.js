@@ -11,7 +11,7 @@ export function StartChatButton({requestedId, requesterName, requestedName}) {
 
     const handleCreateRoomForTwo = async () => {
           const createdRoom = await apiRequest.post(
-            `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroomForTwo`,
+            `users/createNewChatroomForTwo`,
             {
               secondUserId: requestedId,
               name: `${requesterName} and ${requestedName}`,

@@ -16,7 +16,7 @@ export const EditMemberModal = ({ members, groupId, userId, removeModal, setEdit
 
     useEffect(()=>{
         const getUsers = async () => {
-            const users = await apiRequest.get(`${process.env.REACT_APP_BACKEND_URL}/users/byName/${newMemberName}`);
+            const users = await apiRequest.get(`users/byName/${newMemberName}`);
           setSearchedUsers(users.data.users)
         }
         if (newMemberName) {
@@ -26,7 +26,7 @@ export const EditMemberModal = ({ members, groupId, userId, removeModal, setEdit
 
     const addUserToGroup = async (id, name, isAdmin) => {
         if (!(memberIds.includes(id))) {
-            await apiRequest.post(`${process.env.REACT_APP_BACKEND_URL}/groups/addMember`,
+            await apiRequest.post(`groups/addMember`,
                 { groupId, userId: id, isAdmin },
             )
             setMemberIds((prevState)=>{
@@ -50,7 +50,7 @@ export const EditMemberModal = ({ members, groupId, userId, removeModal, setEdit
         } else {
             const response = window.confirm(`Are you sure you want to remove ${name} from your group?`)
             if(response) {
-            await apiRequest.delete(`${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/${id}`)
+            await apiRequest.delete(`groups/${groupId}/${id}`)
                 setMemberIds((prevState) => {
                     const newState = prevState;
                     const removedMemberIndex = prevState.indexOf(id);

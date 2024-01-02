@@ -55,7 +55,7 @@ export function EditGroup({ groupInfo, onEditSaved }) {
 
   const writeData = async () => {
     const response = await apiRequest.put(
-      `${process.env.REACT_APP_BACKEND_URL}/groups/edit/${groupInfo.id}`, // to edit later
+      `groups/edit/${groupInfo.id}`, // to edit later
       groupDetails
     );
     console.log("EditedGroup", response.data.editedGroup)

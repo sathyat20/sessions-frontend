@@ -22,6 +22,10 @@ module.exports = {
           neutral: "hsl(var(--text-neutral) / 1)",
         },
       },
+
+      backgroundImage: {
+        'orchestra': "url('https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Forchestra.jpeg?alt=media&token=39d1a233-c2ca-441b-91d5-34c4f6ec5c40')"
+      }
     },
     plugins: [],
   },

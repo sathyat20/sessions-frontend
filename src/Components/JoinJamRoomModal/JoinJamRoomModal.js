@@ -32,7 +32,7 @@ export const JoinJamRoomModal = ({ userId, removeModal }) => {
       console.log(textField.roomname);
 
       let createRoom = await apiRequest.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroom`,
+        `users/createNewChatroom`,
         {
           userId: userId,
           name: textField.roomname,

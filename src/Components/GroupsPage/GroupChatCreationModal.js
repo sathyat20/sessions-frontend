@@ -14,9 +14,7 @@ export const GroupChatCreationModal = ({ groupId, groupName, onClose }) => {
     // Fetch group members
     const fetchMembers = async () => {
       try {
-        const response = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/members`,
-        ); 
+        const response = await apiRequest.get(`groups/${groupId}/members`); 
         setMembers(response.data);
         console.log(response.data)
       } catch (error) {
@@ -68,7 +66,7 @@ export const GroupChatCreationModal = ({ groupId, groupName, onClose }) => {
     try {
       // Send a POST request to your backend to create a new chat room.
       const response = await apiRequest.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroomForMany`,
+        `users/createNewChatroomForMany`,
         {
           memberIds: memberIdsObject,
           name: groupName,

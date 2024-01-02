@@ -8,9 +8,7 @@ export function Connections({ displayedUserId }) {
   
     useEffect(() => {
       const getConnections = async () => {
-        const connections = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/connections/${displayedUserId}`,
-        );
+        const connections = await apiRequest.get(`connections/${displayedUserId}`);
         setConnectionsList(connections); // replace depending on what comes out of the console.log
       };
       getConnections();
@@ -20,9 +18,9 @@ export function Connections({ displayedUserId }) {
     const displayedConnections = connectionsList.data?.map((connection) => {     
         const usersConnection = connection.requesterRelation ? connection.requesterRelation : connection.requestedRelation
         return (
-            <div className='flex flex-col w-[5em] justify-start'>
+            <div className='flex flex-col w-[5em] justify-start mx-1'>
                 <label for={`navigate-user-${usersConnection.id}`}>
-                    <div className=" h-[5em] rounded-lg overflow-hidden cursor-pointer">
+                    <div className=" h-[5em] rounded-lg overflow-hidden cursor-pointer shadow-sm shadow-slate-500">
                         <img className= 'h-full w-full object-cover' src={usersConnection.profilePictureUrl} />
                     </div>
                 </label>

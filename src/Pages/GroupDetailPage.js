@@ -56,27 +56,21 @@ export const GroupDetailPage = ({ motion }) => {
 
   const onEditSaved = async () => {
     // fetch updated group data
-    const response = await apiRequest.get(
-      `${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`
-    );
+    const response = await apiRequest.get(`groups/group/${groupId}`);
     setGroup(response.data);
   };
 
   useEffect(
     () => {
       const getGroupData = async () => {
-        const response = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`
-        );
+        const response = await apiRequest.get(`groups/group/${groupId}`);
         console.log(response.data);
         setGroup(response.data);
         setEditedInfoToggle(false);
       };
 
       const getCurrentUser = async () => {
-        let currentUserInfo = await apiRequest.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`
-        );
+        let currentUserInfo = await apiRequest.get(`users/getCurrentUser`);
         setUserId(currentUserInfo.data.user.id);
         console.log("userId is", userId);
       };

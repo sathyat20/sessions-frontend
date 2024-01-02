@@ -15,9 +15,7 @@ export function EditArtists({ displayedUserId }) {
 
   useEffect(() => {
     const getArtistInfo = async () => {
-      const artistInfo = await apiRequest.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
-      );
+      const artistInfo = await apiRequest.get(`users/${displayedUserId}/artists`);
       setArtistsList(
         artistInfo.data.artistInterests.map((artist) => artist.name)
       );
@@ -28,15 +26,13 @@ export function EditArtists({ displayedUserId }) {
   const writeData = async () => {
     setIsBeingEdited(false);
     await apiRequest.put(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
+      `users/${displayedUserId}/artists`,
       { artistsList },
     );
   };
 
   const revertData = async () => {
-    const artistInfo = await apiRequest.get(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/artists`,
-    );
+    const artistInfo = await apiRequest.get(`users/${displayedUserId}/artists`);
     setIsBeingEdited(false);
     setArtistsList(
       artistInfo.data.artistInterests.map((artist) => artist.name)
@@ -84,8 +80,9 @@ export function EditArtists({ displayedUserId }) {
   });
 
   const newArtistInput = (
-    <div className="flex flex-row">
+    <div className="flex flex-row my-[0.5em]">
       <input
+      className='border border-black mr-2 font-bold'
         placeholder="Artist"
         type="text"
         name="artist"
@@ -124,10 +121,19 @@ export function EditArtists({ displayedUserId }) {
           id={`editButton-artists`}
           style={{ display: "none" }}
         />
-        {isBeingEdited ? (
-          <div className="flex flex-row">
+        
+      </div>
+      <div className="flex flex-row flex-wrap text-lg font-semibold leading-[1.2em] w-[80%]">
+        {artistText}
+      </div>
+      {isBeingEdited ? newArtistInput : null}
+      {isBeingEdited ? (
+          <div className="flex flex-row py-2">
             <label for={`confirmButton-artists`}>
-              <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
+            <div className="flex flex-row bg-green-200 rounded-lg p-0.5 border border-black my-2 mr-2 font-bold">
+                Save changes
+                <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
+              </div>
             </label>
             <button
               id={`confirmButton-artists`}
@@ -137,7 +143,10 @@ export function EditArtists({ displayedUserId }) {
               }}
             />
             <label for={`rejectButton-artists`}>
-              <XCircleIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+            <div className="flex flex-row bg-red-200 rounded-lg p-0.5 border border-black my-2 mr-2 font-bold">
+                Cancel
+                <XCircleIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+              </div>
             </label>
             <button
               id={`rejectButton-artists`}
@@ -148,11 +157,6 @@ export function EditArtists({ displayedUserId }) {
             />
           </div>
         ) : null}
-      </div>
-      <div className="flex flex-row flex-wrap text-lg font-semibold leading-[1.2em] w-[80%]">
-        {artistText}
-      </div>
-      {isBeingEdited ? newArtistInput : null}
     </div>
   );
 }

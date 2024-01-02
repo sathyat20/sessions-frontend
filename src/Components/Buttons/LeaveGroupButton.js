@@ -8,7 +8,7 @@ export function LeaveGroupButton({userId, groupId}) {
     const handleLeaveGroup = async() => {
         const response = window.confirm(`Are you sure you want to leave the group?`)
             if (response) {
-                await apiRequest.delete(`${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/${userId}`)
+                await apiRequest.delete(`groups/${groupId}/${userId}`)
             navigate("/groups")
             }
     }

@@ -65,7 +65,7 @@ export const AttachmentModal = ({
     if (userMessage) {
       // POST message to Database
       newMessage = await apiRequest.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/postNewMessage`,
+        `users/postNewMessage`,
         {
           chatroomId: chatroomId,
           content: userMessage.message,
@@ -97,7 +97,7 @@ export const AttachmentModal = ({
               // POST the attachment-message relationship
 
               let newAttachment = await apiRequest.post(
-                `${process.env.REACT_APP_BACKEND_URL}/users/postMessageAttachment`,
+                `users/postMessageAttachment`,
                 {
                   mediaURL: uploadURL,
                   messageId: newMessage.data.data.id,
@@ -231,7 +231,6 @@ export const AttachmentModal = ({
             className="secondary-cta-btn w-[100%] lg:w-[100%]"
           />
         </div> */}
-
         <div
           className="fixed top-[1em] right-[1em] hover:cursor-pointer"
           onClick={removeModal}
@@ -239,6 +238,7 @@ export const AttachmentModal = ({
           <XMarkIcon className="h-6 w-6 text-txtcolor-secondary" />
         </div>
       </div>
+      
     </>
   );
 };
