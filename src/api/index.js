@@ -2,7 +2,7 @@ import {jwtDecode} from 'jwt-decode'
 import axios from "axios";
 
 const apiRequest = axios.create({
-    baseURL:'http://localhost:8080/',
+    baseURL:process.env.REACT_APP_BACKEND_URL,
 })
 
 apiRequest.interceptors.request.use(  //intercepts all requests, takes 2 functions

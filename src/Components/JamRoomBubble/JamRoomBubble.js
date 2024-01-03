@@ -24,7 +24,7 @@ export const JamRoomBubble = ({ roomdata }) => {
           <h1 className="font-semibold text-[1.2rem] text-slate-700">
             {roomdata && roomdata.name}
           </h1>
-          <p className="font-medium text-[1.2rem] text-txtcolor-primary balance">
+          {/* <p className="font-medium text-[1.2rem] text-txtcolor-primary balance">
             {roomdata && roomdata.genresPlayed}
           </p>
           <p className="font-medium text-black text-[1rem]">Looking For:</p>
@@ -32,7 +32,7 @@ export const JamRoomBubble = ({ roomdata }) => {
             {roomdata.instrumentsWanted //make sure this is a string or it might not work
               ? roomdata.instrumentsWanted
               : "Not looking for any particular instruments"}
-          </p>
+          </p> */}
 
           <p className="py-[1em]">{roomdata && roomdata.description}</p>
           <p className = "font-sans italic">Last message: {roomdata && timeConversion(roomdata.updatedAt)}</p>
