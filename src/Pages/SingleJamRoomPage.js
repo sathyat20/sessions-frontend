@@ -252,7 +252,7 @@ export const SingleJamRoomPage = () => {
       return { ...prevState, [name]: value };
     });
 
-    socket.emit("user-typing", userId, chatroomId);
+    socket.emit("user-typing", currentUser.fullName, chatroomId);
   };
 
   // Filter Individual Message Details into each Speech Bubble.
@@ -296,6 +296,7 @@ export const SingleJamRoomPage = () => {
 
   return (
     <>
+    {console.log(currentUser)}
       <div className="flex flex-row justify-center h-[100dvh] pt-[2em] pb-[4em] px-[2em] ">
         <div className="flex flex-col w-full gap-0 lg:w-[30%] justify-between overflow-x-hidden overflow-y-auto">
           <div className="flex flex-col pt-[0em] mb-[0em] h-[100%]">
@@ -378,7 +379,7 @@ export const SingleJamRoomPage = () => {
 
             <div className="flex flex-col py-2 h-[20%] gap-[0.5em] lg:mt-[.5em] text-right ">
               <div className="flex flex-col justify-end w-[100%] h-[1.5em] min-h-[1rem] text-center leading-0 ">
-                {isTyping ? `User ${currentTypingUser} is typing...` : null}
+                {isTyping ? `${currentTypingUser} is typing...` : null}
               </div>
               <form>
                 <div className='h-[5em] pb-3'>
