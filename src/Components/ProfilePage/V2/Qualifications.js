@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiRequest from "../../../api";
 
 export function Qualifications({ displayedUserId }) {
     const [userInstrumentsList, setUserInstrumentsList] = useState([]);
 
     useEffect(() => {
         const getUserInstrumentsInfo = async () => {
-            const userInstrumentsInfo = await axios.get(
-                `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`,
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                }
+            const userInstrumentsInfo = await apiRequest.get(
+                `users/${displayedUserId}/instruments`,
             );
             setUserInstrumentsList(userInstrumentsInfo.data.playedInstruments);
         };

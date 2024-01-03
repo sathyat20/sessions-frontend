@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 import Select from "react-select";
 import {
   CheckCircleIcon,
@@ -54,12 +54,9 @@ export function EditGroup({ groupInfo, onEditSaved }) {
   };
 
   const writeData = async () => {
-    const response = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/groups/edit/${groupInfo.id}`, // to edit later
-      groupDetails,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
+    const response = await apiRequest.put(
+      `groups/edit/${groupInfo.id}`, // to edit later
+      groupDetails
     );
     console.log("EditedGroup", response.data.editedGroup)
     setGroupDetails(response.data.editedGroup);

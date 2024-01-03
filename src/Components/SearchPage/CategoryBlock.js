@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 
 export const CategoryBlock = ({ searchMode, category, filterCriteria, setFilterCriteria }) => {
     const [options, setOptions] = useState([])
@@ -9,20 +9,15 @@ export const CategoryBlock = ({ searchMode, category, filterCriteria, setFilterC
 
     useEffect(() => {
         const getOptionsFromDatabase = async () => {
-            const response = await axios.get(
-                `${process.env.REACT_APP_BACKEND_URL}/${category.toLowerCase()}`,
-                {
-                  headers: { Authorization: localStorage.getItem("token") },
-                }
-              );
+            const response = await apiRequest.get(`${category.toLowerCase()}`);
               setOptions(response.data.map((entry) => entry.name));  
         }
-
+        // ['Band', 'Orchestra', 'Choir', 'Concert Band', 'Marching Band', 'Chamber Group','Rap Group', 'Duo', 'Trio', 'Quartet', 'Quintet']
         const nonDatabaseOptions = {
             qualifications: ['Self Taught', 'Low Grade(eg ABRSM 1-5)', 'High Grade(eg ABRSM 6-8)','Diploma', "Bachelor's degree", "Master's degree", "Doctorate"],
             musicianship: ['Amateur', 'Full-time music student', 'Semi-Pro', 'Professional', 'Educator' ],
             musicianshipGroup: ['Amateur', 'Semi-Pro', 'Professional', 'School' ],
-            'ensemble type': ['Band', 'Orchestra', 'Choir', 'Concert Band', 'Marching Band', 'Chamber Group'],
+            'ensemble type':'',
             name:''
         }
         if (category === 'Musicianship' && searchMode === 'groups') {
@@ -37,8 +32,6 @@ export const CategoryBlock = ({ searchMode, category, filterCriteria, setFilterC
     return (
         <div className='flex flex-row w-full items-center'>
             <h1 className='text-xl font-bold w-[6em]'>{category}</h1>
-            {console.log(category)}
-            {console.log(filterCriteria[category])}
             {options ? 
             <Select
                 className='w-[10em] mx-[1em]'

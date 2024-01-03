@@ -80,6 +80,7 @@ export const LoginPage = ({ motion }) => {
       // localStorage.setItem('userId', checkUser.data.id)
       // localStorage.setItem('userName', user.username)
       localStorage.setItem("token", "Bearer " + checkUser.data.data);
+      localStorage.setItem("refresh", "Bearer " + checkUser.data.refresh)
       navigate("/search/type");
     } else {
       alert("Sign in unsuccessful. " + checkUser.data.msg);

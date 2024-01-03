@@ -6,7 +6,7 @@ import {
   TrashIcon,
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../../../api";
 
 export function EditGenres({ displayedUserId }) {
   const [genresList, setGenresList] = useState([]);
@@ -15,12 +15,7 @@ export function EditGenres({ displayedUserId }) {
 
   useEffect(() => {
     const getGenreInfo = async () => {
-      const genreInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
+      const genreInfo = await apiRequest.get(`users/${displayedUserId}/genres`);
       setGenresList(genreInfo.data.genreInterests.map((genre) => genre.name)); // check what's in genreInfo
     };
     getGenreInfo();
@@ -28,22 +23,14 @@ export function EditGenres({ displayedUserId }) {
 
   const writeData = async () => {
     setIsBeingEdited(false);
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
+    await apiRequest.put(
+      `users/${displayedUserId}/genres`,
       { genresList },
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
     );
   };
 
   const revertData = async () => {
-    const genreInfo = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/genres`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
-    );
+    const genreInfo = await apiRequest.get(`users/${displayedUserId}/genres`);
     setIsBeingEdited(false);
     setGenresList(genreInfo.data.genreInterests.map((genre) => genre.name));
   };
@@ -89,13 +76,14 @@ export function EditGenres({ displayedUserId }) {
   });
 
   const newGenreInput = (
-    <div className="flex flex-row">
+    <div className="flex flex-row my-[0.5em]">
       <input
-        placeholder="Genre"
+        className='border border-black mr-2 font-bold'
+        placeholder="Add New Genre"
         type="text"
         name="genre"
         id="name"
-        size="10"
+        size="15"
         value={newGenre}
         onChange={(e) => {
           setNewGenre(e.target.value);
@@ -129,10 +117,19 @@ export function EditGenres({ displayedUserId }) {
           id={`editButton-genres`}
           style={{ display: "none" }}
         />
-        {isBeingEdited ? (
-          <div className="flex flex-row">
+        
+      </div>
+      <div className=" flex flex-row flex-wrap text-lg font-semibold leading-[1.2em]">
+        {genreText}
+      </div>
+      {isBeingEdited ? newGenreInput : null}
+      {isBeingEdited ? (
+          <div className="flex flex-row py-2">
             <label for={`confirmButton-genres`}>
-              <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
+              <div className="flex flex-row bg-green-200 rounded-lg p-0.5 border border-black my-2 mr-2 font-bold">
+                Save changes
+                <CheckCircleIcon className="h-6 w-6 text-green-500 cursor-pointer" />
+              </div>
             </label>
             <button
               id={`confirmButton-genres`}
@@ -142,7 +139,10 @@ export function EditGenres({ displayedUserId }) {
               }}
             />
             <label for={`rejectButton-genres`}>
-              <XCircleIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+              <div className="flex flex-row bg-red-200 rounded-lg p-0.5 border border-black my-2 mr-2 font-bold">
+                Cancel
+                <XCircleIcon className="h-6 w-6 text-red-500 cursor-pointer" />
+              </div>
             </label>
             <button
               id={`rejectButton-genres`}
@@ -153,11 +153,6 @@ export function EditGenres({ displayedUserId }) {
             />
           </div>
         ) : null}
-      </div>
-      <div className=" flex flex-row flex-wrap text-lg font-semibold leading-[1.2em]">
-        {genreText}
-      </div>
-      {isBeingEdited ? newGenreInput : null}
     </div>
   );
 }

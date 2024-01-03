@@ -10,6 +10,7 @@ import "./App.css";
 // Import Libraries
 import { motion } from "framer-motion";
 import axios from "axios";
+import apiRequest from "./api";
 
 // Import Auth Provider
 
@@ -43,22 +44,36 @@ function App() {
   const context = {userId, setUserId, userName, setUserName};
 
   useEffect(() => {
-    let TOKEN = localStorage.getItem("token");
-    console.log(TOKEN)
-    if (TOKEN) {
+    // let TOKEN = localStorage.getItem("token");
+    // if (TOKEN) {
+    //   const getCurrentUser = async () => {
+    //     try {
+    //       let currentUserInfo = await axios.get(
+    //         `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
+    //         {
+    //           headers: { Authorization: TOKEN },
+    //         }
+    //       );
+    //       setUserName(currentUserInfo.data.user.fullName);
+    //       setUserId(currentUserInfo.data.user.id);
+    //     } catch (err) {
+    //       console.log('token expired, proceed to sign up/sign in')
+    //     }
+    //   };
+    //   getCurrentUser();
+    // } 
+
       const getCurrentUser = async () => {
-        console.log('getting')
-        let currentUserInfo = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-          {
-            headers: { Authorization: TOKEN },
-          }
-        );
-        setUserName(currentUserInfo.data.user.fullName);
-        setUserId(currentUserInfo.data.user.id);
+        try {
+          let currentUserInfo = await apiRequest.get(`users/getCurrentUser`);
+          setUserName(currentUserInfo.data.user.fullName);
+          setUserId(currentUserInfo.data.user.id);
+        } catch (err) {
+          console.log('token expired, proceed to sign up/sign in')
+        }
       };
       getCurrentUser();
-    } 
+     
     
   }, []);
 

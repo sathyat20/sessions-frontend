@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiRequest from "../../../api";
 import {VideoTile} from "../../VideoTile.js";
 
 export function SessionClips({ displayedUserId }) {
@@ -7,11 +7,8 @@ export function SessionClips({ displayedUserId }) {
   
     useEffect(() => {
       const getClips = async () => {
-        const clips = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/clips`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
+        const clips = await apiRequest.get(
+          `users/${displayedUserId}/clips`,
         );
         setClipsList(clips); // replace depending on what comes out of the console.log
       };
@@ -21,7 +18,7 @@ export function SessionClips({ displayedUserId }) {
     
     const displayedClips = clipsList.data?.map((clip) => {     
       return (
-        <div className = 'pr-[0.5em]'>
+        <div className = 'pr-[0.5em] py-[0.5em]'>
         <VideoTile videoId = {clip.id} videoUrl = {clip.hostUrl}/>
         </div>
       );

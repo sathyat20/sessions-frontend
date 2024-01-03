@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 
 export const EditMemberModal = ({ members, groupId, userId, removeModal, setEditedInfoToggle }) => {
     const [newMemberName, setNewMemberName] = useState("")
@@ -16,11 +16,7 @@ export const EditMemberModal = ({ members, groupId, userId, removeModal, setEdit
 
     useEffect(()=>{
         const getUsers = async () => {
-            const users = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/users/byName/${newMemberName}`,
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
-          );
+            const users = await apiRequest.get(`users/byName/${newMemberName}`);
           setSearchedUsers(users.data.users)
         }
         if (newMemberName) {
@@ -30,11 +26,8 @@ export const EditMemberModal = ({ members, groupId, userId, removeModal, setEdit
 
     const addUserToGroup = async (id, name, isAdmin) => {
         if (!(memberIds.includes(id))) {
-            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/groups/addMember`,
+            await apiRequest.post(`groups/addMember`,
                 { groupId, userId: id, isAdmin },
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                }
             )
             setMemberIds((prevState)=>{
                 const newState = prevState
@@ -57,11 +50,7 @@ export const EditMemberModal = ({ members, groupId, userId, removeModal, setEdit
         } else {
             const response = window.confirm(`Are you sure you want to remove ${name} from your group?`)
             if(response) {
-            await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/${id}`,
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                }
-            )
+            await apiRequest.delete(`groups/${groupId}/${id}`)
                 setMemberIds((prevState) => {
                     const newState = prevState;
                     const removedMemberIndex = prevState.indexOf(id);

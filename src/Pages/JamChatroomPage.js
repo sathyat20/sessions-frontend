@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import apiRequest from "../api";
 
 // Import Icons
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
@@ -42,12 +42,7 @@ export const JamChatroomPage = ({ motion }) => {
     if (tokenAuth) {
       // console.log("getting current user");
       const getCurrentUser = async () => {
-        let currentUserInfo = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        );
+        let currentUserInfo = await apiRequest.get(`users/getCurrentUser`);
         setCurrentUser(currentUserInfo.data.user);
         setUserId(currentUserInfo.data.user.id);
 
@@ -109,12 +104,7 @@ export const JamChatroomPage = ({ motion }) => {
   };
 
   const getRoomData = async () => {
-    let userRoomInformation = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/users/joinedChatrooms`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
-    );
+    let userRoomInformation = await apiRequest.get(`users/joinedChatrooms`);
 
     if (userRoomInformation.data.success === true) {
       setUserRoomData(userRoomInformation.data.data);

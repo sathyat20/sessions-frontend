@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiRequest from "../../api";
 import React, { useEffect, useState } from "react";
 
 export const GroupAddNotification = ({ notification, setNotificationStatusToggled}) => {
@@ -9,21 +9,16 @@ export const GroupAddNotification = ({ notification, setNotificationStatusToggle
     useEffect(() => {
         const getUserInfo = async () => {
           if (notification.sourceId) {
-          const sourceInfo = await axios.get(
+          const sourceInfo = await apiRequest.get(
             `${process.env.REACT_APP_BACKEND_URL}/users/${notification.sourceId}`,
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
           );
           setSourceUserInfo({...sourceInfo.data.user});
           }
         };
 
         const getGroupInfo = async () => {
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/groups/group/${notification.details}`,
-              {
-                headers: { Authorization: localStorage.getItem("token") },
-              }
+            const response = await apiRequest.get(
+              `${process.env.REACT_APP_BACKEND_URL}/groups/group/${notification.details}`
             );
             setSourceGroupInfo(response.data)
           }
@@ -34,14 +29,11 @@ export const GroupAddNotification = ({ notification, setNotificationStatusToggle
     }, []);
 
     const dismissNotification = async() => {
-        await axios.put(
+        await apiRequest.put(
             `${process.env.REACT_APP_BACKEND_URL}/notifications/${notification.id}`,
             { 
                 hasBeenViewed: true
             },
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
           );
           setNotificationStatusToggled(true)
           setIsSeen(true);       

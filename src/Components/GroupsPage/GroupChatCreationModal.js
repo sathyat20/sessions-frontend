@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { UserContext } from "../../App";
 import { useNavigate } from "react-router-dom";
@@ -14,12 +14,7 @@ export const GroupChatCreationModal = ({ groupId, groupName, onClose }) => {
     // Fetch group members
     const fetchMembers = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/${groupId}/members`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        ); 
+        const response = await apiRequest.get(`groups/${groupId}/members`); 
         setMembers(response.data);
         console.log(response.data)
       } catch (error) {
@@ -70,17 +65,14 @@ export const GroupChatCreationModal = ({ groupId, groupName, onClose }) => {
 
     try {
       // Send a POST request to your backend to create a new chat room.
-      const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroomForMany`,
+      const response = await apiRequest.post(
+        `users/createNewChatroomForMany`,
         {
           memberIds: memberIdsObject,
           name: groupName,
           description: "", 
           genresPlayed: "", 
           instrumentsWanted: "", 
-        },
-        {
-          headers: { Authorization: localStorage.getItem("token") },
         }
       );
 

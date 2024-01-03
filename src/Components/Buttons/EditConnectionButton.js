@@ -1,5 +1,5 @@
 import { UserPlusIcon, UserMinusIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 import React, { useEffect, useState } from "react";
 
 //this button should not display on user's own profile page
@@ -9,12 +9,7 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
 
     useEffect(() => {
         const getConnections = async () => {
-            const connections = await axios.get(
-                `${process.env.REACT_APP_BACKEND_URL}/connections/${requesterId}`,
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                }
-            );
+            const connections = await apiRequest.get(`connections/${requesterId}`);
             const pulledIds = {};
             connections.data.forEach((connection) => {
                 const usersConnection = connection.requesterRelation ? connection.requesterRelation : connection.requestedRelation
@@ -38,12 +33,9 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
         if (mode === 'pending') {
             return;
         } else if (mode === 'add') {
-            const backendResponse = await axios.post(
-                `${process.env.REACT_APP_BACKEND_URL}/connections/`,
+            const backendResponse = await apiRequest.post(
+                `connections/`,
                 {requesterId, requestedId},
-                {
-                  headers: { Authorization: localStorage.getItem("token") },
-                }
               );
             // setConnectedIds((prevState)=>{
             //     return {...prevState, [requestedId]:'pending'}
@@ -53,11 +45,8 @@ export function EditConnectionButton({requesterId, requestedId, requestedName}) 
         } else if (mode === 'delete') {
             const response = window.confirm(`Are you sure you want to remove ${requestedName} from your connections?`)
                 if (response) { 
-                    const backendResponse = await axios.delete(
-                        `${process.env.REACT_APP_BACKEND_URL}/connections/${requesterId}/${requestedId}`,
-                        {
-                          headers: { Authorization: localStorage.getItem("token") },
-                        }
+                    const backendResponse = await apiRequest.delete(
+                        `connections/${requesterId}/${requestedId}`,
                       );
                     // setConnectedIds((prevState)=>{
                     //     const {requestedId, ...others} = prevState;

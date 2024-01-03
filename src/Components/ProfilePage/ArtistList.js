@@ -1,3 +1,5 @@
+/* DEPRECATED */
+
 import React, { useEffect, useState } from "react";
 import {
   CheckCircleIcon,

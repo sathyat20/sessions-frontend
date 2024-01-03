@@ -10,7 +10,7 @@ import { VideoTile } from "../Components/VideoTile";
 
 import { GroupChatCreationModal } from "../Components/GroupsPage/GroupChatCreationModal";
 
-import axios from "axios";
+import apiRequest from "../api";
 import { EditMemberModal } from "../Components/Buttons/EditMemberModal";
 import { EditMemberButton } from "../Components/Buttons/EditMemberButton";
 import { LeaveGroupButton } from "../Components/Buttons/LeaveGroupButton";
@@ -56,36 +56,21 @@ export const GroupDetailPage = ({ motion }) => {
 
   const onEditSaved = async () => {
     // fetch updated group data
-    const response = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
-    );
+    const response = await apiRequest.get(`groups/group/${groupId}`);
     setGroup(response.data);
   };
 
   useEffect(
     () => {
       const getGroupData = async () => {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/group/${groupId}`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        );
+        const response = await apiRequest.get(`groups/group/${groupId}`);
         console.log(response.data);
         setGroup(response.data);
         setEditedInfoToggle(false);
       };
 
       const getCurrentUser = async () => {
-        let currentUserInfo = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/users/getCurrentUser`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        );
+        let currentUserInfo = await apiRequest.get(`users/getCurrentUser`);
         setUserId(currentUserInfo.data.user.id);
         console.log("userId is", userId);
       };
@@ -126,7 +111,7 @@ export const GroupDetailPage = ({ motion }) => {
                   <img
                     src={group.profilePictureUrl}
                     alt={`${group.groupName} Profile`}
-                    className="mx-auto h-48 w-full object-cover rounded"
+                    className=" mx-auto h-48 w-[80%] object-cover rounded shadow "
                   />
                 )}
 
@@ -163,10 +148,10 @@ export const GroupDetailPage = ({ motion }) => {
 
               {/* About Us */}
               <div className="mb-8">
-                <h2 className="text-3xl text-yellow-400 font-bold mb-4">
+                <h2 className="text-3xl text-yellow-400 font-bold mb-4 text-left">
                   ABOUT US
                 </h2>
-                <p>{group.bio}</p>
+                <p className = "text-justify">{group.bio}</p>
               </div>
 
               {/* Members */}
