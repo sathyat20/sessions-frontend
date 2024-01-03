@@ -6,7 +6,7 @@ import {
   TrashIcon,
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
-import axios from "axios";
+import apiRequest from "../../../../api";
 import Select from "react-select";
 
 export function EditInstruments({ displayedUserId }) {
@@ -21,21 +21,11 @@ export function EditInstruments({ displayedUserId }) {
 
   useEffect(() => {
     const getUserInstrumentsInfo = async () => {
-      const userInstrumentsInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
+      const userInstrumentsInfo = await apiRequest.get(`users/${displayedUserId}/instruments`);
       setUserInstrumentsList(userInstrumentsInfo.data.playedInstruments);
     };
     const getFullInstrumentsList = async () => {
-      const fullInstrumentsInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/instruments/selectable`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
+      const fullInstrumentsInfo = await apiRequest.get(`instruments/selectable`);
       setFullInstrumentsList(fullInstrumentsInfo.data);
     };
     getUserInstrumentsInfo();
@@ -54,24 +44,16 @@ export function EditInstruments({ displayedUserId }) {
 
   const writeData = async () => {
     setIsBeingEdited(false);
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`,
+    await apiRequest.put(
+      `users/${displayedUserId}/instruments`,
       {
         userInstrumentsList,
       },
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
     );
   };
 
   const revertData = async () => {
-    const instrumentInfo = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}/instruments`,
-      {
-        headers: { Authorization: localStorage.getItem("token") },
-      }
-    );
+    const instrumentInfo = await apiRequest.get(`users/${displayedUserId}/instruments`);
     setIsBeingEdited(false);
     setUserInstrumentsList(instrumentInfo.data.playedInstruments);
   };

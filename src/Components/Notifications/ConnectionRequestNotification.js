@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiRequest from "../../api";
 import React, { useEffect, useState } from "react";
 
 export const ConnectionRequestNotification = ({ userId, notification, setNotificationStatusToggled}) => {
@@ -8,12 +8,9 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
     useEffect(() => {
         const getUserInfo = async () => {
           if (notification.sourceId) {
-          const sourceInfo = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URL}/users/${notification.sourceId}`,
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
-          );
+          const sourceInfo = await apiRequest.get(
+            `users/${notification.sourceId}`
+            );
           setSourceUserInfo({...sourceInfo.data.user});
           }
         };
@@ -21,49 +18,36 @@ export const ConnectionRequestNotification = ({ userId, notification, setNotific
     }, []);
 
     const acceptReq = async () => {
-        await axios.put(
-            `${process.env.REACT_APP_BACKEND_URL}/connections/`,
+        await apiRequest.put(
+            `connections/`,
             { 
                 requesterId: notification.sourceId,
                 requestedId: userId,
                 status: 'confirmed'
             },
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
           );
-          await axios.put(
-            `${process.env.REACT_APP_BACKEND_URL}/notifications/${notification.id}`,
+          await apiRequest.put(
+            `notifications/${notification.id}`,
             { 
                 hasBeenViewed: true
             },
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
           );
           setNotificationStatusToggled(true)
           setIsSeen(true);       
     }
 
-    const deleteReq = async () => {
-        await axios.delete(
-            `${process.env.REACT_APP_BACKEND_URL}/connections/${notification.sourceId}/${userId}`,
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
-          );
-          await axios.put(
-            `${process.env.REACT_APP_BACKEND_URL}/notifications/${notification.id}`,
-            { 
-                hasBeenViewed: true
-            },
-            {
-              headers: { Authorization: localStorage.getItem("token") },
-            }
-          );
-          setNotificationStatusToggled(true)
-          setIsSeen(true);
-    }
+  const deleteReq = async () => {
+    await apiRequest.delete(
+      `connections/${notification.sourceId}/${userId}`);
+    await apiRequest.put(
+      `notifications/${notification.id}`,
+      {
+        hasBeenViewed: true
+      },
+    );
+    setNotificationStatusToggled(true)
+    setIsSeen(true);
+  }
 
     if(!isSeen) {
     return (

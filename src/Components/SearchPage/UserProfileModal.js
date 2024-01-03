@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import axios from "axios";
+import apiRequest from "../../api";
 import { useNavigate } from "react-router-dom";
 
 // Import Components
@@ -31,9 +31,7 @@ export const UserProfileModal = ({ pageOwnerUserId, removeModal }) => {
 
     useEffect(()=>{
         const getUserInfo = async () => {
-          const retrievedPageOwnerInfo = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/users/${pageOwnerUserId}`,{
-            headers: { Authorization: localStorage.getItem("token") },
-        })
+          const retrievedPageOwnerInfo = await apiRequest.get(`users/${pageOwnerUserId}`)
           setPageOwnerInfo(retrievedPageOwnerInfo.data.user)
         }
     getUserInfo();
@@ -41,17 +39,14 @@ export const UserProfileModal = ({ pageOwnerUserId, removeModal }) => {
 
   const handleCreateRoomForTwo = async () => {
     if (textField.roomname != "") {
-      const createdRoom = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/users/createNewChatroomForTwo`,
+      const createdRoom = await apiRequest.post(
+        `users/createNewChatroomForTwo`,
         {
           secondUserId: pageOwnerInfo.id,
           name: textField.roomname,
           genresPlayed: "",
           instrumentsWanted: "",
         },
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
       );
       const chatRoomId = createdRoom.data.data[0][0].chatroomId;
       alert("Room Created!");

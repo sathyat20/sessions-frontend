@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import apiRequest from "../../../../api";
 import { storage } from "../../../../firebase/firebase.js";
 import { ref as sRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
@@ -19,12 +19,9 @@ export function EditPic({ displayedUserId, storedURL }) {
     uploadBytes(fileRef, profilePicture)
       .then(() => getDownloadURL(fileRef))
       .then((url) => {
-        axios.put(`${process.env.REACT_APP_BACKEND_URL}/users/${displayedUserId}`, {
+        apiRequest.put(`users/${displayedUserId}`, {
           profilePictureUrl: url,
-        },
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-      });
+        });
       });
   };
 
@@ -35,16 +32,15 @@ export function EditPic({ displayedUserId, storedURL }) {
 
   return (
       <div className="flex flex-col items-center pb-[2em] relative">
-          {console.log(profilePictureURL)}
-          <div className="w-[15em] h-[15em] rounded-[50%] overflow-hidden">
+          <div className="w-[15em] h-[15em] rounded-[50%] overflow-hidden shadow-md">
               <img
                   src={profilePictureURL}
                   alt="Profile photo"
-                  className="h-full object-cover"
+                  className="h-full w-full object-cover"
               />
           </div>
           <label htmlFor="profile-picture" className="cursor-pointer">
-              {!isBeingEdited ? <div className='absolute top-0 right-[10%] z-[30] bg-white rounded-[50%] w-[4em] h-[4em] border border-blue-800 flex justify-center items-center'>
+              {!isBeingEdited ? <div className='absolute top-0 right-[10%] z-[30] bg-white rounded-[50%] w-[4em] h-[4em] border border-slate-500 flex justify-center items-center shadow-xl'>
                   <PencilSquareIcon className="h-8 w-8 text-gray-500" />
               </div>
               :null}

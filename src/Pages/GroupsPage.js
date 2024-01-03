@@ -1,32 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../api";
 import {UserContext} from "../App";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 export const GroupsPage = ({ motion }) => {
-  const [tokenAuth, setTokenAuth] = useState(null);
   const [groups, setGroups] = useState([]);
   const { userId, userName } = useContext(UserContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    let TOKEN = localStorage.getItem("token");
-    console.log("get token: ", TOKEN);
-    setTokenAuth(TOKEN);
-
     const fetchGroups = async () => {
        if (!userId) {
          return;
        }
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/groups/${userId}`,
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        );
+        const response = await apiRequest.get(`groups/${userId}`);
         console.log(response.data)
         setGroups(response.data);
       } catch (err) {

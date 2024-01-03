@@ -13,7 +13,7 @@ import { NotificationsButton } from "../Components/Buttons/NotificationsButton";
 import { StartChatButton } from "../Components/Buttons/StartChatButton";
 import { ArrowLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { NotificationsModal } from "../Components/Buttons/NotificationsModal";
-import axios from "axios";
+import apiRequest from "../api";
 
 export const ProfilePage = ({ motion, loggedInUserId }) => {
   const { pageOwnerUserId } = useParams();
@@ -33,15 +33,8 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   //Load info for the current user being displayed(also retrieved the logged in user's id)
   useEffect(() => {
     const getUserInfo = async () => {
-      const pulledPageOwnerInfo = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users/${
-          pageOwnerUserId ? pageOwnerUserId : "getCurrentUser"
-        }`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-      console.log(pulledPageOwnerInfo)
+      const pulledPageOwnerInfo = await apiRequest.get(
+        `users/${pageOwnerUserId ? pageOwnerUserId : "getCurrentUser"}`);
       setPageOwnerInfo({ ...pulledPageOwnerInfo.data.user });
       setUserId(pulledPageOwnerInfo.data.ownId);
       setIsOwnPage(
@@ -55,12 +48,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
   //Load notifications for the logged in user
   useEffect(() => {
     const getNotifications = async () => {
-      const retrievedNotifications = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/notifications/`,
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
+      const retrievedNotifications = await apiRequest.get(`notifications`);
       const readStatus = retrievedNotifications.data.notifications.reduce(
         (acc, notification) => {
           return acc && notification.hasBeenViewed;
@@ -88,11 +76,23 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
     setEditProfileModalToggle(false);
   };
 
+  const handleLogOut = async () => {
+    const accessToken = localStorage.getItem("token")
+    const refreshToken = localStorage.getItem("refresh")
+    const response = await apiRequest.put(`users/jwtLogOut`,
+      {
+        accessToken,
+        refreshToken
+      }
+    )     
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh")
+    context.setUserId(null);
+    navigate("/");
+  }
+
   return (
     <>
-    {console.log(isOwnPage)}
-    {console.log(userId)}
-    {console.log(pageOwnerUserId)}
       <div className="flex flex-row justify-center h-[93dvh] pt-[2em] pb-[4em] px-[2em] w-full overflow-y-auto">
         {/* <div className="flex flex-col w-full lg:w-[30%] justify-between overflow-x-visible overflow-y-auto"> */}
         <div className="flex flex-col pt-[2em] mb-[-10em] w-full">
@@ -109,7 +109,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
             {pageOwnerInfo ? (
               <section>
                 <div className="flex flex-col items-center pb-[1em] relative overflow-visible">
-                  <div className="w-[15em] h-[15em] rounded-[50%] overflow-hidden ">
+                  <div className="w-[15em] h-[15em] rounded-[50%] overflow-hidden shadow-md">
                     <img
                       src={pageOwnerInfo.profilePictureUrl}
                       alt="Profile photo"
@@ -117,7 +117,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
                     />
                   </div>
 
-                  <div className="h-[10em] w-[2em] absolute top-10 -left-8 bg-blue-900 rounded-r-md z-[8]">
+                  <div className="h-[10em] w-[2em] absolute top-10 -left-8 bg-blue-900 rounded-r-md z-[8] shadow-md shadow-black">
                     {isOwnPage ? (
                       <div className="flex flex-col h-full rounded-r-md justify-evenly items-center">
                         <button
@@ -196,11 +196,7 @@ export const ProfilePage = ({ motion, loggedInUserId }) => {
               <input
                 type="button"
                 value="LOGOUT"
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  context.setUserId(null);
-                  navigate("/");
-                }}
+                onClick={() => {handleLogOut()}}
                 className="secondary-cta-btn w-[100%] lg:w-[100%]"
               />
             </form>

@@ -20,11 +20,11 @@ export const JamRoomBubble = ({ roomdata }) => {
   return (
     <>
       <NavLink to={`/${roomdata.id}/jamroom`}>
-        <div className="w-[full] min-h-[7em] bg-white rounded-md border py-[1em] px-[1em] shadow-sm scale-100 transition-all origin-left hover:scale-[102%] active:scale-[97%]">
+        <div className="w-[full] min-h-[7em] bg-white rounded-lg border py-[1em] px-[1em] shadow-sm scale-100 transition-all origin-left hover:scale-[102%] active:scale-[97%]">
           <h1 className="font-semibold text-[1.2rem] text-slate-700">
             {roomdata && roomdata.name}
           </h1>
-          <p className="font-medium text-[1.2rem] text-txtcolor-primary balance">
+          {/* <p className="font-medium text-[1.2rem] text-txtcolor-primary balance">
             {roomdata && roomdata.genresPlayed}
           </p>
           <p className="font-medium text-black text-[1rem]">Looking For:</p>
@@ -32,10 +32,10 @@ export const JamRoomBubble = ({ roomdata }) => {
             {roomdata.instrumentsWanted //make sure this is a string or it might not work
               ? roomdata.instrumentsWanted
               : "Not looking for any particular instruments"}
-          </p>
+          </p> */}
 
           <p className="py-[1em]">{roomdata && roomdata.description}</p>
-          <p>{roomdata && timeConversion(roomdata.updatedAt)}</p>
+          <p className = "font-sans italic">Last message: {roomdata && timeConversion(roomdata.updatedAt)}</p>
         </div>
       </NavLink>
     </>

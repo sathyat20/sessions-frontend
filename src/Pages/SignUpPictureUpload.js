@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../api";
 
 // Import Firebase Db and Methods
 import { storage } from "../firebase/firebase.js"; // Reference to Firebase Storage Db
@@ -39,10 +39,9 @@ export const SignUpPictureUpload = ({ motion }) => {
       await uploadBytes(storageRef, uploadedFile.fileInputFile);
       const fileUrl = await getDownloadURL(storageRef);
       console.log(fileUrl)
-      await axios.post(
+      await apiRequest.post(
         `${process.env.REACT_APP_BACKEND_URL}/users/addProfilePicture`,
         { photoURL: fileUrl },
-        { headers: { Authorization: tokenAuth } }
       );
       alert("Image Uploaded!");
       navigate("/additionaldetails");

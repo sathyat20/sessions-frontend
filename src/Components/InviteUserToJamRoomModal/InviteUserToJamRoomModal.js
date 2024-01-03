@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 
 // Import Sockets
 import { io } from "socket.io-client"; // io is a function to call an individual socket. the package for frontend(client side) is npm i socket.io-client
 const socket = io(process.env.REACT_APP_BACKEND_URL);
 
 export const InviteUserToJamRoomModal = ({ removeModal, chatroomId }) => {
-  const [tokenAuth, setTokenAuth] = useState(null);
+  // const [tokenAuth, setTokenAuth] = useState(null);
   const [textField, setTextField] = useState({ invitedUserId: "" });
 
-  useEffect(() => {
-    let TOKEN = localStorage.getItem("token");
-    console.log("get token: ", TOKEN);
-    setTokenAuth(TOKEN);
-  }, []);
+  // useEffect(() => {
+  //   let TOKEN = localStorage.getItem("token");
+  //   console.log("get token: ", TOKEN);
+  //   setTokenAuth(TOKEN);
+  // }, []);
 
   const handleTextChange = (ev) => {
     let name = ev.target.name;
@@ -32,13 +32,13 @@ export const InviteUserToJamRoomModal = ({ removeModal, chatroomId }) => {
     if (textField.invitedUserId !== "") {
       console.log(textField.invitedUserId);
 
-      let invitedUser = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/chatrooms/addUserToChatroom`,
+      let invitedUser = await apiRequest.post(
+        `chatrooms/addUserToChatroom`,
         {
           chatroomId: chatroomId,
           username: textField.invitedUserId,
         },
-        { headers: { Authorization: tokenAuth } }
+        // { headers: { Authorization: tokenAuth } }
       );
 
       alert("Invited the User!");

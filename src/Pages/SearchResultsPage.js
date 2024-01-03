@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {UserResult} from "../Components/SearchPage/UserResult"
 import {GroupResult} from "../Components/SearchPage/GroupResult"
 import {useParams, useSearchParams, useNavigate} from 'react-router-dom';
-import axios from "axios";
+import apiRequest from "../api";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export const SearchResultsPage = ({ motion }) => {
@@ -14,9 +14,8 @@ export const SearchResultsPage = ({ motion }) => {
 
     useEffect(() => {
         const getResults = async () => {
-          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/${searchMode}/search`,
+          const response = await apiRequest.get(`${searchMode}/search`,
           {
-            headers: { Authorization: localStorage.getItem("token") },
             params: searchParams 
           } 
           )

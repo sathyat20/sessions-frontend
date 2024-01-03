@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import apiRequest from "../../api";
 import {
     CheckCircleIcon,
     XCircleIcon,
@@ -16,13 +16,9 @@ export function JamRoomName({ storedRoomName, chatroomId }) {
             alert('Please enter a room name')
         } else {
             setIsBeingEdited(false);
-            axios.put(`${process.env.REACT_APP_BACKEND_URL}/chatrooms/${chatroomId}`,
-                {
-                    name: roomName,
-                },
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                });
+            apiRequest.put(`chatrooms/${chatroomId}`,
+                { name: roomName }
+            );
         }
     };
 

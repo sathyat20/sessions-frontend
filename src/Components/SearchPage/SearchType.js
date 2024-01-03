@@ -2,26 +2,27 @@ import { Link } from "react-router-dom";
 
 export const SearchType = ({ motion }) => {
     return (
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-col items-center justify-around'>
             
-            <section className='h-2/5 w-full flex items-center rounded-lg overflow-hidden pb-[1em]'>
-            <div className = 'h-full w-full grid grid-cols-2 gap-0'>        
-                    <div className = 'min-h-[50%]'>
-                        <img className = 'h-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fguitar.jpg?alt=media&token=2257fd1e-7224-40c8-bc20-9da1ecfc9fe9'/>
+            <section className=' relative h-1/3 w-full gap-0 items-center rounded-lg overflow-hidden bg-green-300 shadow-md shadow-slate-500'>
+            <div className = "grid grid-cols-2 grid-rows-2 w-full h-full">
+                    <div className = 'h-full p-0'>
+                        <img className = 'h-full w-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fguitar.webp?alt=media&token=9ee15be5-b8fe-4cf3-b159-1fb46808bc6e'/>
                     </div>
-                    <div>
-                        <img className = 'h-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fflute.jpg?alt=media&token=05af9585-56b0-4752-9d26-9cd98d9e618d'/>
+                    <div className = 'h-full'>
+                        <img className = 'h-full w-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fflute.webp?alt=media&token=48d0c5da-0f55-463e-a05f-90cd7f634b38'/>
                     </div>
-                    <div className = 'h-[10em] overflow-hidden'>
-                        <img className = 'w-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fviolin.jpg?alt=media&token=807f1b03-9ea0-4ebe-a4ed-80576659eb47'/>
+                    <div className = 'h-full overflow-hidden'>
+                        <img className = 'h-full w-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fviolin.webp?alt=media&token=f32471ba-d5b0-46f1-8f0b-0465af818ec5'/>
                     </div>
-                    <div className = 'h-[10em] overflow-hidden'>
-                        <img className = 'h-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fpiano.jpg?alt=media&token=25756921-0449-4ed8-9833-0483dbce5ffc' />
-                    </div>
+                    <div className = 'h-full overflow-hidden'>
+                        <img className = 'h-full w-full object-cover' src = 'https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Fpiano.webp?alt=media&token=f15157dd-9f40-44e5-a321-ab15c5a2348b' />
             </div>
-                <div className='flex bg-white text-4xl font-bold text-blue-800 rounded-[50%] border border-black h-[4.5em] w-[4.5em] items-center absolute top-[10%] right-[30%] '>
+            <div className='flex bg-white text-3xl font-bold text-blue-800 rounded-[50%] border border-black h-[8rem] w-[8rem] items-center absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2'>
                     <Link to="/search/users" className = 'text-center text-blue-800 '> Search Users</Link>
                 </div>
+            </div>
+                
            
 
             </section>
@@ -29,18 +30,20 @@ export const SearchType = ({ motion }) => {
 
 
 
-            <section className='h-1/5 flex items-center'>
-                <h1 className='text-slate-500 text-4xl font-bold text-center'>LOOKING FOR SOMEONE TO JAM WITH?</h1>
+            <section className='h-1/5 flex items-center '>
+                <h1 className='text-slate-500 text-4xl font-black text-center'>LOOKING FOR SOMEONE TO JAM WITH?</h1>
+                
             </section>
 
            
            
-            <section className='h-2/5 flex items-center'>
-                <Link to="/search/groups" className='cursor-pointer max-h-[80%] relative text-center rounded-lg overflow-hidden'>
-                    <p className='absolute text-white top-[50%] left-[50%] font-bold text-4xl -translate-x-1/2 -translate-y-1/2 w-max'>Search Groups</p>
-                    <img className='object-contain' src='https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Forchestra.jpeg?alt=media&token=39d1a233-c2ca-441b-91d5-34c4f6ec5c40' alt='orchestra' />
+            <div className="cursor-pointer rounded-lg overflow-hidden shadow-md shadow-slate-500 h-1/3 w-full bg-cover bg-center bg-[url(https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Forchestra.jpeg?alt=media&token=39d1a233-c2ca-441b-91d5-34c4f6ec5c40)] bg-blend-multiply bg-gray-400 bg-no-repeat">
+                <Link to="/search/groups" className = 'h-full w-full flex justify-center items-center'>
+                <p className='text-white font-bold text-3xl '>Search Groups</p>
+                    {/* <p className='absolute text-white top-[50%] left-[50%] font-bold text-4xl -translate-x-1/2 -translate-y-1/2 w-max'>Search Groups</p> */}
+                    {/* <img className='object-contain' src='https://firebasestorage.googleapis.com/v0/b/sessions-7df6d.appspot.com/o/utilities%2Forchestra.jpeg?alt=media&token=39d1a233-c2ca-441b-91d5-34c4f6ec5c40' alt='orchestra' /> */}
                 </Link>
-            </section>
+            </div>
         </div>
     )
 }
